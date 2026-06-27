@@ -5,7 +5,11 @@ import { OverviewGrid } from "@/components/home/overview-grid";
 import { Latest } from "@/components/home/latest";
 import { Subscribe } from "@/components/home/subscribe";
 
-export default function HomePage() {
+/**
+ * /v1 — the POC homepage (ADGM-styled shell) with the AI search overlay.
+ * This is the locked, working POC; the root "/" hosts the exact site clone.
+ */
+export default function V1HomePage() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />

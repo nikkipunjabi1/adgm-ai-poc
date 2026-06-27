@@ -29,7 +29,26 @@ retrieved data, on **entirely free infrastructure** (the LLM aside).
   (up to 3 levels).
 - **Live "thinking" indicator** — a single-line, query-specific status (ChatGPT/
   Gemini style), generated up front by a fast model.
-- **ADGM homepage clone** with the search as an **overlay** (⌘K / Esc).
+
+## Routes
+
+| Route | What it is |
+|---|---|
+| `/` | **Exact mirror** of the live adgm.com homepage — a self-contained offline snapshot (HTML + all CSS/JS/images/fonts under `public/adgm-clone/`). Served via a Next.js rewrite. |
+| `/v1` | The **POC homepage** (ADGM-styled shell) with the AI search overlay (⌘K / Esc). |
+| `/search` | Full-page search experience. |
+| `/api/search` | Streaming NDJSON search endpoint. |
+
+### Re-mirroring the homepage
+
+```bash
+npm run mirror   # re-renders adgm.com with Playwright and refreshes public/adgm-clone
+```
+
+The mirror keeps the page's scripts so its custom web components hydrate and style
+themselves; third-party widgets (chat, analytics) are stripped or fail silently
+offline. Root-relative asset paths the JS requests at runtime fall back to the
+clone folder via rewrites in `next.config.mjs`.
 
 ## Stack
 

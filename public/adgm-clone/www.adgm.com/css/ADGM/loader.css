@@ -1,0 +1,94 @@
+.leader-modal {
+    padding-inline: 2.4px;
+    overflow: hidden;
+    position: fixed;
+    background: rgba(0, 0, 0, 0.7);
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1050;
+    opacity: 0;
+    outline: 0;
+    visibility: visible;
+    -webkit-transition: opacity 0.15s linear;
+    transition: opacity 0.15s linear;
+}
+
+.leader-modal__container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    margin-inline: auto;
+    height: 100vh;
+    opacity: 0;
+    transform: translate3d(0, 0, 0) !important;
+    transition: transform 0.3s ease-in-out;
+}
+
+.modal-hidden {
+    visibility: hidden !important;
+}
+
+.leader-modal.active, .leader-modal__container.active {
+    opacity: 1 !important;
+}
+
+.loader-sec {
+    margin-inline: auto;
+    width: 50px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 8px solid #0088FF;
+    animation: l20-1 0.8s infinite linear alternate, l20-2 1.6s infinite linear;
+    visibility: hidden;
+}
+
+@keyframes l20-1 {
+    0% {
+        clip-path: polygon(50% 50%, 0 0, 50% 0%, 50% 0%, 50% 0%, 50% 0%, 50% 0%);
+    }
+
+    12.5% {
+        clip-path: polygon( 50% 50%, 0 0, 50% 0%, 100% 0%, 100% 0%, 100% 0%, 100% 0% );
+    }
+
+    25% {
+        clip-path: polygon( 50% 50%, 0 0, 50% 0%, 100% 0%, 100% 100%, 100% 100%, 100% 100% );
+    }
+
+    50% {
+        clip-path: polygon( 50% 50%, 0 0, 50% 0%, 100% 0%, 100% 100%, 50% 100%, 0% 100% );
+    }
+
+    62.5% {
+        clip-path: polygon( 50% 50%, 100% 0, 100% 0%, 100% 0%, 100% 100%, 50% 100%, 0% 100% );
+    }
+
+    75% {
+        clip-path: polygon( 50% 50%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 50% 100%, 0% 100% );
+    }
+
+    100% {
+        clip-path: polygon( 50% 50%, 50% 100%, 50% 100%, 50% 100%, 50% 100%, 50% 100%, 0% 100% );
+    }
+}
+
+@keyframes l20-2 {
+    0% {
+        transform: scaleY(1) rotate(0deg);
+    }
+
+    49.99% {
+        transform: scaleY(1) rotate(135deg);
+    }
+
+    50% {
+        transform: scaleY(-1) rotate(0deg);
+    }
+
+    100% {
+        transform: scaleY(-1) rotate(-135deg);
+    }
+}

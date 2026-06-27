@@ -13,6 +13,7 @@
     "start": "next start",
     "ingest": "tsx src/ingestion/cli.ts",
     "extract-pdfs": "tsx src/ingestion/extract-pdfs.ts",
+    "mirror": "node scripts/mirror-adgm.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

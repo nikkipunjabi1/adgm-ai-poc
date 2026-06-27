@@ -9,6 +9,15 @@ A POC: generative RAG search over ADGM content. Next.js 15 app + Supabase
 pgvector + local embeddings + Claude. The crawled dataset is already ingested;
 most work is on the **search experience**, not the crawler.
 
+## Routes
+
+- `/` — exact mirror of adgm.com (static snapshot in `public/adgm-clone/`, served
+  via a `next.config.mjs` rewrite). Refresh with `npm run mirror`.
+- `/v1` — the working POC homepage (`app/v1/page.tsx`) + search overlay.
+- `/search`, `/api/search` — search page and streaming endpoint.
+
+Don't put an `app/page.tsx` back at the root — it would shadow the clone rewrite.
+
 ## Commands
 
 - `npm run dev` — run the app (port 3000)

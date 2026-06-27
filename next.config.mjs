@@ -13,6 +13,32 @@ const nextConfig = {
   outputFileTracingExcludes: {
     "*": ["./src/ingestion/**", "./data/**"],
   },
+  // "/" serves the exact mirrored ADGM homepage snapshot (public/adgm-clone).
+  // The working POC homepage lives at "/v1".
+  async rewrites() {
+    // Root-relative asset paths that the cloned page's JS requests at runtime
+    // (e.g. /images/icons/x.svg) — fall back to the mirrored copy under the
+    // www.adgm.com clone folder so they resolve to local files.
+    const assetDirs = [
+      "images",
+      "fonts",
+      "css",
+      "js",
+      "content",
+      "globalassets",
+      "siteassets",
+      "Static",
+      "media",
+    ];
+    return {
+      beforeFiles: [{ source: "/", destination: "/adgm-clone/index.html" }],
+      afterFiles: assetDirs.map((d) => ({
+        source: `/${d}/:path*`,
+        destination: `/adgm-clone/www.adgm.com/${d}/:path*`,
+      })),
+      fallback: [],
+    };
+  },
 };
 
 export default nextConfig;
