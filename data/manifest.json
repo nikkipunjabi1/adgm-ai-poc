@@ -1,0 +1,110 @@
+[
+  {
+    "sourceId": "firms",
+    "lastRunAt": "2026-06-26T13:53:09.799Z",
+    "rawCount": 471,
+    "normalizedCount": 471,
+    "lastRunCount": 471,
+    "durationMs": 96109,
+    "ok": true
+  },
+  {
+    "sourceId": "individuals",
+    "lastRunAt": "2026-06-26T17:15:00.886Z",
+    "rawCount": 2829,
+    "normalizedCount": 2829,
+    "lastRunCount": 2829,
+    "durationMs": 10820232,
+    "ok": true
+  },
+  {
+    "sourceId": "funds",
+    "lastRunAt": "2026-06-26T13:54:16.336Z",
+    "rawCount": 260,
+    "normalizedCount": 260,
+    "lastRunCount": 260,
+    "durationMs": 66519,
+    "ok": true
+  },
+  {
+    "sourceId": "cases",
+    "lastRunAt": "2026-06-26T14:02:31.109Z",
+    "rawCount": 2069,
+    "normalizedCount": 2069,
+    "lastRunCount": 2069,
+    "durationMs": 494755,
+    "ok": true
+  },
+  {
+    "sourceId": "judgments",
+    "lastRunAt": "2026-06-26T14:03:27.470Z",
+    "rawCount": 153,
+    "normalizedCount": 153,
+    "lastRunCount": 153,
+    "durationMs": 48591,
+    "ok": true
+  },
+  {
+    "sourceId": "documents",
+    "lastRunAt": "2026-06-26T14:06:24.852Z",
+    "rawCount": 500,
+    "normalizedCount": 500,
+    "lastRunCount": 500,
+    "durationMs": 177365,
+    "ok": true
+  },
+  {
+    "sourceId": "hearings",
+    "lastRunAt": "2026-06-26T18:37:52.179Z",
+    "rawCount": 11,
+    "normalizedCount": 11,
+    "lastRunCount": 11,
+    "durationMs": 6458,
+    "ok": true
+  },
+  {
+    "sourceId": "news",
+    "lastRunAt": "2026-06-26T14:10:04.433Z",
+    "rawCount": 1093,
+    "normalizedCount": 1093,
+    "lastRunCount": 1093,
+    "durationMs": 219539,
+    "ok": true
+  },
+  {
+    "sourceId": "panelists",
+    "lastRunAt": "2026-06-26T14:11:24.376Z",
+    "rawCount": 213,
+    "normalizedCount": 213,
+    "lastRunCount": 213,
+    "durationMs": 45431,
+    "ok": true
+  },
+  {
+    "sourceId": "notices",
+    "lastRunAt": "2026-06-26T14:14:40.504Z",
+    "rawCount": 791,
+    "normalizedCount": 791,
+    "lastRunCount": 791,
+    "durationMs": 196115,
+    "ok": true
+  },
+  {
+    "sourceId": "events",
+    "lastRunAt": "2026-06-26T14:10:38.931Z",
+    "rawCount": 1,
+    "normalizedCount": 1,
+    "lastRunCount": 1,
+    "durationMs": 34484,
+    "ok": true
+  },
+  {
+    "sourceId": "pages",
+    "lastRunAt": "2026-06-26T17:21:01.581Z",
+    "rawCount": 63,
+    "normalizedCount": 63,
+    "lastRunCount": 63,
+    "durationMs": 306873,
+    "ok": true
+  }
+]

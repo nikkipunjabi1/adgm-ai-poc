@@ -1,0 +1,25 @@
+# dependencies
+node_modules/
+
+# env
+.env
+.env.local
+
+# build
+.next/
+dist/
+tsconfig.tsbuildinfo
+next-env.d.ts
+
+# crawled data (large; regenerated via ingestion)
+data/raw/
+data/pdfs/
+data/debug/
+data/*.log
+
+# playwright
+playwright-report/
+test-results/
+
+# OS
+.DS_Store

@@ -1,0 +1,18 @@
+[
+  {
+    "uid": "events:https://mena.thomsonreuters.com/en/events/webinar-uae-e-invoicing-readiness-for-adgm-licensed-entities.html?elqTrackId=7852503DDA0FED1B13B737EBC5C40121&elqTrack=true&utm_source=adgm  ",
+    "sourceId": "events",
+    "contentType": "event",
+    "sourceNativeId": "https://mena.thomsonreuters.com/en/events/webinar-uae-e-invoicing-readiness-for-adgm-licensed-entities.html?elqTrackId=7852503DDA0FED1B13B737EBC5C40121&elqTrack=true&utm_source=adgm  ",
+    "url": "https://mena.thomsonreuters.com/en/events/webinar-uae-e-invoicing-readiness-for-adgm-licensed-entities.html?elqTrackId=7852503DDA0FED1B13B737EBC5C40121&elqTrack=true&utm_source=adgm",
+    "title": "UAE E-Invoicing Readiness for ADGM Licensed Entities",
+    "summary": "Webinar · 07 Jul",
+    "body": "UAE E-Invoicing Readiness for ADGM Licensed Entities\nLocation: Webinar\nDate: 07 Jul",
+    "date": "07 Jul",
+    "fields": {
+      "location": "Webinar",
+      "dateText": "07 Jul"
+    },
+    "crawledAt": "2026-06-26T14:10:38.912Z"
+  }
+]

@@ -1,0 +1,266 @@
+[
+  {
+    "uid": "hearings:27 Jun 2026 12:00 PM - 07:00 PM ADGMCFI-2022-299",
+    "sourceId": "hearings",
+    "contentType": "court",
+    "sourceNativeId": "27 Jun 2026 12:00 PM - 07:00 PM ADGMCFI-2022-299",
+    "url": "https://www.adgm.com/adgm-courts/hearings",
+    "title": "Trial — ADGMCFI-2022-299",
+    "summary": "NMC Healthcare LTD (in administration) (subject to a deed of company arrangement) & Others v. Shetty & Others · 27 Jun 2026 12:00 PM - 07:00 PM",
+    "body": "Case Number: ADGMCFI-2022-299\nEvent Type: Trial\nParties: NMC Healthcare LTD (in administration) (subject to a deed of company arrangement) & Others v. Shetty & Others\nWhen: 27 Jun 2026 12:00 PM - 07:00 PM\nJudge: Justice Sir Andrew Smith",
+    "date": "27 Jun 2026 12:00 PM - 07:00 PM",
+    "fields": {
+      "caseNumber": "ADGMCFI-2022-299",
+      "eventType": "Trial",
+      "parties": "NMC Healthcare LTD (in administration) (subject to a deed of company arrangement) & Others v. Shetty & Others",
+      "when": "27 Jun 2026 12:00 PM - 07:00 PM",
+      "judge": "Justice Sir Andrew Smith",
+      "location": "View live hearing",
+      "courtType": "hearing"
+    },
+    "crawledAt": "2026-06-26T18:37:52.160Z",
+    "relations": {
+      "parentUid": "cases:ADGMCFI-2022-299"
+    }
+  },
+  {
+    "uid": "hearings:27 Jun 2026 12:00 PM - 07:00 PM ADGMCFI-2022-111",
+    "sourceId": "hearings",
+    "contentType": "court",
+    "sourceNativeId": "27 Jun 2026 12:00 PM - 07:00 PM ADGMCFI-2022-111",
+    "url": "https://www.adgm.com/adgm-courts/hearings",
+    "title": "Trial — ADGMCFI-2022-111",
+    "summary": "Abu Dhabi Commercial Bank PJSC v Prasanth Manghat · 27 Jun 2026 12:00 PM - 07:00 PM",
+    "body": "Case Number: ADGMCFI-2022-111\nEvent Type: Trial\nParties: Abu Dhabi Commercial Bank PJSC v Prasanth Manghat\nWhen: 27 Jun 2026 12:00 PM - 07:00 PM\nJudge: Justice Sir Andrew Smith",
+    "date": "27 Jun 2026 12:00 PM - 07:00 PM",
+    "fields": {
+      "caseNumber": "ADGMCFI-2022-111",
+      "eventType": "Trial",
+      "parties": "Abu Dhabi Commercial Bank PJSC v Prasanth Manghat",
+      "when": "27 Jun 2026 12:00 PM - 07:00 PM",
+      "judge": "Justice Sir Andrew Smith",
+      "location": "View live hearing",
+      "courtType": "hearing"
+    },
+    "crawledAt": "2026-06-26T18:37:52.160Z",
+    "relations": {
+      "parentUid": "cases:ADGMCFI-2022-111"
+    }
+  },
+  {
+    "uid": "hearings:29 Jun 2026 - 09 Jul 2026 12:00 PM - 07:00 PM ADGMCFI-2022-299",
+    "sourceId": "hearings",
+    "contentType": "court",
+    "sourceNativeId": "29 Jun 2026 - 09 Jul 2026 12:00 PM - 07:00 PM ADGMCFI-2022-299",
+    "url": "https://www.adgm.com/adgm-courts/hearings",
+    "title": "Trial — ADGMCFI-2022-299",
+    "summary": "NMC Healthcare LTD (in administration) (subject to a deed of company arrangement) & Others v. Shetty & Others · 29 Jun 2026 - 09 Jul 2026 12:00 PM - 07:00 PM",
+    "body": "Case Number: ADGMCFI-2022-299\nEvent Type: Trial\nParties: NMC Healthcare LTD (in administration) (subject to a deed of company arrangement) & Others v. Shetty & Others\nWhen: 29 Jun 2026 - 09 Jul 2026 12:00 PM - 07:00 PM\nJudge: Justice Sir Andrew Smith",
+    "date": "29 Jun 2026 - 09 Jul 2026 12:00 PM - 07:00 PM",
+    "fields": {
+      "caseNumber": "ADGMCFI-2022-299",
+      "eventType": "Trial",
+      "parties": "NMC Healthcare LTD (in administration) (subject to a deed of company arrangement) & Others v. Shetty & Others",
+      "when": "29 Jun 2026 - 09 Jul 2026 12:00 PM - 07:00 PM",
+      "judge": "Justice Sir Andrew Smith",
+      "location": "View live hearing",
+      "courtType": "hearing"
+    },
+    "crawledAt": "2026-06-26T18:37:52.160Z",
+    "relations": {
+      "parentUid": "cases:ADGMCFI-2022-299"
+    }
+  },
+  {
+    "uid": "hearings:29 Jun 2026 - 09 Jul 2026 12:00 PM - 07:00 PM ADGMCFI-2022-111",
+    "sourceId": "hearings",
+    "contentType": "court",
+    "sourceNativeId": "29 Jun 2026 - 09 Jul 2026 12:00 PM - 07:00 PM ADGMCFI-2022-111",
+    "url": "https://www.adgm.com/adgm-courts/hearings",
+    "title": "Trial — ADGMCFI-2022-111",
+    "summary": "Abu Dhabi Commercial Bank PJSC v Prasanth Manghat · 29 Jun 2026 - 09 Jul 2026 12:00 PM - 07:00 PM",
+    "body": "Case Number: ADGMCFI-2022-111\nEvent Type: Trial\nParties: Abu Dhabi Commercial Bank PJSC v Prasanth Manghat\nWhen: 29 Jun 2026 - 09 Jul 2026 12:00 PM - 07:00 PM\nJudge: Justice Sir Andrew Smith",
+    "date": "29 Jun 2026 - 09 Jul 2026 12:00 PM - 07:00 PM",
+    "fields": {
+      "caseNumber": "ADGMCFI-2022-111",
+      "eventType": "Trial",
+      "parties": "Abu Dhabi Commercial Bank PJSC v Prasanth Manghat",
+      "when": "29 Jun 2026 - 09 Jul 2026 12:00 PM - 07:00 PM",
+      "judge": "Justice Sir Andrew Smith",
+      "location": "View live hearing",
+      "courtType": "hearing"
+    },
+    "crawledAt": "2026-06-26T18:37:52.160Z",
+    "relations": {
+      "parentUid": "cases:ADGMCFI-2022-111"
+    }
+  },
+  {
+    "uid": "hearings:02 Jul 2026 02:00 PM - 03:00 PM ADGMCFI-2025-508",
+    "sourceId": "hearings",
+    "contentType": "court",
+    "sourceNativeId": "02 Jul 2026 02:00 PM - 03:00 PM ADGMCFI-2025-508",
+    "url": "https://www.adgm.com/adgm-courts/hearings",
+    "title": "Case Management Conference — ADGMCFI-2025-508",
+    "summary": "Alkhbrat Aldwalia Legal Consultants L.L.C – O.P.C v. AlShaymaa Asfour Ahmad Mashaal & Anor. · 02 Jul 2026 02:00 PM - 03:00 PM",
+    "body": "Case Number: ADGMCFI-2025-508\nEvent Type: Case Management Conference\nParties: Alkhbrat Aldwalia Legal Consultants L.L.C – O.P.C v. AlShaymaa Asfour Ahmad Mashaal & Anor.\nWhen: 02 Jul 2026 02:00 PM - 03:00 PM\nJudge: Justice James McNeill",
+    "date": "02 Jul 2026 02:00 PM - 03:00 PM",
+    "fields": {
+      "caseNumber": "ADGMCFI-2025-508",
+      "eventType": "Case Management Conference",
+      "parties": "Alkhbrat Aldwalia Legal Consultants L.L.C – O.P.C v. AlShaymaa Asfour Ahmad Mashaal & Anor.",
+      "when": "02 Jul 2026 02:00 PM - 03:00 PM",
+      "judge": "Justice James McNeill",
+      "location": "View live hearing",
+      "courtType": "hearing"
+    },
+    "crawledAt": "2026-06-26T18:37:52.160Z",
+    "relations": {
+      "parentUid": "cases:ADGMCFI-2025-508"
+    }
+  },
+  {
+    "uid": "hearings:06 Jul 2026 - 13 Jul 2026 10:00 AM - 05:00 PM ADGMCFI-2025-216",
+    "sourceId": "hearings",
+    "contentType": "court",
+    "sourceNativeId": "06 Jul 2026 - 13 Jul 2026 10:00 AM - 05:00 PM ADGMCFI-2025-216",
+    "url": "https://www.adgm.com/adgm-courts/hearings",
+    "title": "Trial — ADGMCFI-2025-216",
+    "summary": "Saoud Mubarak Ali Hlais Alneyadi & Others v. NFT Trading LLC & Others · 06 Jul 2026 - 13 Jul 2026 10:00 AM - 05:00 PM",
+    "body": "Case Number: ADGMCFI-2025-216\nEvent Type: Trial\nParties: Saoud Mubarak Ali Hlais Alneyadi & Others v. NFT Trading LLC & Others\nWhen: 06 Jul 2026 - 13 Jul 2026 10:00 AM - 05:00 PM\nJudge: Justice Paul Heath KC",
+    "date": "06 Jul 2026 - 13 Jul 2026 10:00 AM - 05:00 PM",
+    "fields": {
+      "caseNumber": "ADGMCFI-2025-216",
+      "eventType": "Trial",
+      "parties": "Saoud Mubarak Ali Hlais Alneyadi & Others v. NFT Trading LLC & Others",
+      "when": "06 Jul 2026 - 13 Jul 2026 10:00 AM - 05:00 PM",
+      "judge": "Justice Paul Heath KC",
+      "location": "View live hearing",
+      "courtType": "hearing"
+    },
+    "crawledAt": "2026-06-26T18:37:52.160Z",
+    "relations": {
+      "parentUid": "cases:ADGMCFI-2025-216"
+    }
+  },
+  {
+    "uid": "hearings:21 Jul 2026 10:30 AM - 12:30 PM ADGMCFI-2026-394",
+    "sourceId": "hearings",
+    "contentType": "court",
+    "sourceNativeId": "21 Jul 2026 10:30 AM - 12:30 PM ADGMCFI-2026-394",
+    "url": "https://www.adgm.com/adgm-courts/hearings",
+    "title": "Hearing — ADGMCFI-2026-394",
+    "summary": "In the matter of TAFFI LTD · 21 Jul 2026 10:30 AM - 12:30 PM",
+    "body": "Case Number: ADGMCFI-2026-394\nEvent Type: Hearing\nParties: In the matter of TAFFI LTD\nWhen: 21 Jul 2026 10:30 AM - 12:30 PM\nJudge: Justice William Stone",
+    "date": "21 Jul 2026 10:30 AM - 12:30 PM",
+    "fields": {
+      "caseNumber": "ADGMCFI-2026-394",
+      "eventType": "Hearing",
+      "parties": "In the matter of TAFFI LTD",
+      "when": "21 Jul 2026 10:30 AM - 12:30 PM",
+      "judge": "Justice William Stone",
+      "location": "View live hearing",
+      "courtType": "hearing"
+    },
+    "crawledAt": "2026-06-26T18:37:52.160Z",
+    "relations": {
+      "parentUid": "cases:ADGMCFI-2026-394"
+    }
+  },
+  {
+    "uid": "hearings:22 Jul 2026 - 23 Jul 2026 10:00 AM - 04:00 PM ADGMCFI-2025-419",
+    "sourceId": "hearings",
+    "contentType": "court",
+    "sourceNativeId": "22 Jul 2026 - 23 Jul 2026 10:00 AM - 04:00 PM ADGMCFI-2025-419",
+    "url": "https://www.adgm.com/adgm-courts/hearings",
+    "title": "Trial — ADGMCFI-2025-419",
+    "summary": "Valeriia Radchenko v. Marshel Group Limited & Anor. · 22 Jul 2026 - 23 Jul 2026 10:00 AM - 04:00 PM",
+    "body": "Case Number: ADGMCFI-2025-419\nEvent Type: Trial\nParties: Valeriia Radchenko v. Marshel Group Limited & Anor.\nWhen: 22 Jul 2026 - 23 Jul 2026 10:00 AM - 04:00 PM\nJudge: Justice William Stone",
+    "date": "22 Jul 2026 - 23 Jul 2026 10:00 AM - 04:00 PM",
+    "fields": {
+      "caseNumber": "ADGMCFI-2025-419",
+      "eventType": "Trial",
+      "parties": "Valeriia Radchenko v. Marshel Group Limited & Anor.",
+      "when": "22 Jul 2026 - 23 Jul 2026 10:00 AM - 04:00 PM",
+      "judge": "Justice William Stone",
+      "location": "View live hearing",
+      "courtType": "hearing"
+    },
+    "crawledAt": "2026-06-26T18:37:52.160Z",
+    "relations": {
+      "parentUid": "cases:ADGMCFI-2025-419"
+    }
+  },
+  {
+    "uid": "hearings:27 Jul 2026 10:00 AM - 01:00 PM ADGMCFI-2026-127",
+    "sourceId": "hearings",
+    "contentType": "court",
+    "sourceNativeId": "27 Jul 2026 10:00 AM - 01:00 PM ADGMCFI-2026-127",
+    "url": "https://www.adgm.com/adgm-courts/hearings",
+    "title": "Hearing — ADGMCFI-2026-127",
+    "summary": "Victor Kalgin v. Tentum LLP · 27 Jul 2026 10:00 AM - 01:00 PM",
+    "body": "Case Number: ADGMCFI-2026-127\nEvent Type: Hearing\nParties: Victor Kalgin v. Tentum LLP\nWhen: 27 Jul 2026 10:00 AM - 01:00 PM\nJudge: Justice William Stone",
+    "date": "27 Jul 2026 10:00 AM - 01:00 PM",
+    "fields": {
+      "caseNumber": "ADGMCFI-2026-127",
+      "eventType": "Hearing",
+      "parties": "Victor Kalgin v. Tentum LLP",
+      "when": "27 Jul 2026 10:00 AM - 01:00 PM",
+      "judge": "Justice William Stone",
+      "location": "View live hearing",
+      "courtType": "hearing"
+    },
+    "crawledAt": "2026-06-26T18:37:52.160Z",
+    "relations": {
+      "parentUid": "cases:ADGMCFI-2026-127"
+    }
+  },
+  {
+    "uid": "hearings:28 Jul 2026 10:00 AM - 03:00 PM ADGMCFI-2026-375",
+    "sourceId": "hearings",
+    "contentType": "court",
+    "sourceNativeId": "28 Jul 2026 10:00 AM - 03:00 PM ADGMCFI-2026-375",
+    "url": "https://www.adgm.com/adgm-courts/hearings",
+    "title": "Hearing — ADGMCFI-2026-375",
+    "summary": "AME 137 SPV Limited v. Hyphen Group Holding SPV Limited · 28 Jul 2026 10:00 AM - 03:00 PM",
+    "body": "Case Number: ADGMCFI-2026-375\nEvent Type: Hearing\nParties: AME 137 SPV Limited v. Hyphen Group Holding SPV Limited\nWhen: 28 Jul 2026 10:00 AM - 03:00 PM\nJudge: Justice William Stone",
+    "date": "28 Jul 2026 10:00 AM - 03:00 PM",
+    "fields": {
+      "caseNumber": "ADGMCFI-2026-375",
+      "eventType": "Hearing",
+      "parties": "AME 137 SPV Limited v. Hyphen Group Holding SPV Limited",
+      "when": "28 Jul 2026 10:00 AM - 03:00 PM",
+      "judge": "Justice William Stone",
+      "location": "View live hearing",
+      "courtType": "hearing"
+    },
+    "crawledAt": "2026-06-26T18:37:52.160Z",
+    "relations": {
+      "parentUid": "cases:ADGMCFI-2026-375"
+    }
+  },
+  {
+    "uid": "hearings:17 Sep 2026 - 18 Sep 2026 09:00 AM - 05:00 PM ADGMCFI-2026-118",
+    "sourceId": "hearings",
+    "contentType": "court",
+    "sourceNativeId": "17 Sep 2026 - 18 Sep 2026 09:00 AM - 05:00 PM ADGMCFI-2026-118",
+    "url": "https://www.adgm.com/adgm-courts/hearings",
+    "title": "Trial — ADGMCFI-2026-118",
+    "summary": "Mohamad Muzaffer Nahvi v. Reem Hospital Ltd & Anor · 17 Sep 2026 - 18 Sep 2026 09:00 AM - 05:00 PM",
+    "body": "Case Number: ADGMCFI-2026-118\nEvent Type: Trial\nParties: Mohamad Muzaffer Nahvi v. Reem Hospital Ltd & Anor\nWhen: 17 Sep 2026 - 18 Sep 2026 09:00 AM - 05:00 PM\nJudge: Justice William Stone",
+    "date": "17 Sep 2026 - 18 Sep 2026 09:00 AM - 05:00 PM",
+    "fields": {
+      "caseNumber": "ADGMCFI-2026-118",
+      "eventType": "Trial",
+      "parties": "Mohamad Muzaffer Nahvi v. Reem Hospital Ltd & Anor",
+      "when": "17 Sep 2026 - 18 Sep 2026 09:00 AM - 05:00 PM",
+      "judge": "Justice William Stone",
+      "location": "View live hearing",
+      "courtType": "hearing"
+    },
+    "crawledAt": "2026-06-26T18:37:52.160Z",
+    "relations": {
+      "parentUid": "cases:ADGMCFI-2026-118"
+    }
+  }
+]
