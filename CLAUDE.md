@@ -15,8 +15,13 @@ most work is on the **search experience**, not the crawler.
   via a `next.config.mjs` rewrite). Refresh with `npm run mirror`.
 - `/v1` — the working POC homepage (`app/v1/page.tsx`) + search overlay.
 - `/search`, `/api/search` — search page and streaming endpoint.
+- `/embed/search` — chromeless POC search; the `/` clone embeds it in an iframe.
+  The clone's `search-button`/⌘K open it (overlay injected by
+  `scripts/inject-search.mjs`, run automatically by the mirror).
 
 Don't put an `app/page.tsx` back at the root — it would shadow the clone rewrite.
+If `next build` errors with `PageNotFoundError` for a page that clearly exists,
+`rm -rf .next` and rebuild — a dev server sharing `.next` can leave stale traces.
 
 ## Commands
 

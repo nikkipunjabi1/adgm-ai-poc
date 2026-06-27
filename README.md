@@ -34,9 +34,10 @@ retrieved data, on **entirely free infrastructure** (the LLM aside).
 
 | Route | What it is |
 |---|---|
-| `/` | **Exact mirror** of the live adgm.com homepage — a self-contained offline snapshot (HTML + all CSS/JS/images/fonts under `public/adgm-clone/`). Served via a Next.js rewrite. |
+| `/` | **Exact mirror** of the live adgm.com homepage — a self-contained offline snapshot (HTML + all CSS/JS/images/fonts under `public/adgm-clone/`). Served via a Next.js rewrite. Its **search icon (and ⌘K) open the POC search** in an overlay. |
 | `/v1` | The **POC homepage** (ADGM-styled shell) with the AI search overlay (⌘K / Esc). |
 | `/search` | Full-page search experience. |
+| `/embed/search` | Chromeless search, embedded by the `/` clone via an `<iframe>`. |
 | `/api/search` | Streaming NDJSON search endpoint. |
 
 ### Re-mirroring the homepage
@@ -49,6 +50,12 @@ The mirror keeps the page's scripts so its custom web components hydrate and sty
 themselves; third-party widgets (chat, analytics) are stripped or fail silently
 offline. Root-relative asset paths the JS requests at runtime fall back to the
 clone folder via rewrites in `next.config.mjs`.
+
+After mirroring, `scripts/inject-search.mjs` injects a small overlay into the
+snapshot: clicking the homepage's `search-button` (or ⌘K) opens an `<iframe>` of
+`/embed/search` — so the real POC search works directly from the `/` clone. The
+mirror script runs this automatically; re-run it standalone with
+`node scripts/inject-search.mjs`.
 
 ## Stack
 

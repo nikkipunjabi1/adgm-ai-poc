@@ -12,6 +12,7 @@ import { createHash } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { injectSearch } from "./inject-search.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = path.join(ROOT, "public", "adgm-clone");
@@ -148,6 +149,9 @@ async function main() {
   await mkdir(OUT, { recursive: true });
   await writeFile(path.join(OUT, "index.html"), html, "utf8");
   console.log("→ wrote", path.join(OUT, "index.html"));
+
+  // Wire the POC search overlay into the snapshot.
+  await injectSearch();
   console.log("done.");
 }
 
