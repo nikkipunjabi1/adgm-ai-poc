@@ -36,9 +36,10 @@ retrieved data, on **entirely free infrastructure** (the LLM aside).
 |---|---|
 | `/` | **Exact mirror** of the live adgm.com homepage — a self-contained offline snapshot (HTML + all CSS/JS/images/fonts under `public/adgm-clone/`). Served via a Next.js rewrite. Its **search icon (and ⌘K) open the POC search** in an overlay. |
 | `/demo` | The **same clone**, plus an interactive **demo-cards** strip beneath the hero (capability showcase whose cards open `/search?q=…`). Use this surface for demos; `/` stays pristine. |
-| `/public-registers/fsra` (+ `/firms`, `/individuals`, `/funds`) | **Cloned FSRA Public Register** whose dead register widget is replaced by a working, AI-powered explorer over our firms/individuals/funds data — tabbed, with classic keyword **and** semantic (AI) search; results deep-link into `/search`. |
-| `/embed/register` | Chromeless register explorer, embedded inline by the FSRA clone via an `<iframe>`. |
-| `/api/register` | Register search endpoint (classic substring filter + AI semantic via embeddings). |
+| `/public-registers/fsra` (+ `/firms`, `/individuals`, `/funds`) | **Cloned FSRA Public Register** whose dead register widget is replaced by a working, AI-powered explorer over our firms/individuals/funds data — tabbed, with classic keyword **and** semantic (AI) search; results deep-link to the live ADGM detail pages. |
+| `/embed/register` · `/api/register` | Chromeless register explorer (embedded inline by the FSRA clone) + its data endpoint. |
+| `/adgm-courts/cases` (+ `/hearings`, `/judgments`) | **Cloned ADGM Courts** pages; the dead listing widget is replaced by a tabbed explorer over our cases/hearings/judgments data (classic + AI search), each card deep-linking to the filtered ADGM page. |
+| `/embed/courts` · `/api/courts` | Chromeless courts explorer (embedded inline by the courts clones) + its data endpoint. |
 | `/v1` | The **POC homepage** (ADGM-styled shell) with the AI search overlay (⌘K / Esc). |
 | `/search` | Full-page search experience. |
 | `/embed/search` | Chromeless search, embedded by the `/` clone via an `<iframe>`. |
@@ -47,8 +48,9 @@ retrieved data, on **entirely free infrastructure** (the LLM aside).
 ### Re-mirroring the homepage
 
 ```bash
-npm run mirror        # re-renders adgm.com (homepage) and refreshes public/adgm-clone
-npm run mirror:fsra   # re-renders the FSRA Public Register page + injects the AI explorer
+npm run mirror         # re-renders adgm.com (homepage) and refreshes public/adgm-clone
+npm run mirror:fsra    # re-renders the FSRA Public Register page + injects the AI explorer
+npm run mirror:courts  # re-renders the ADGM Courts page + injects the AI explorer
 ```
 
 The mirror keeps the page's scripts so its custom web components hydrate and style

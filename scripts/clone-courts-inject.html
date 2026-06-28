@@ -1,0 +1,74 @@
+<!-- POC-COURTS-INJECT:start  (added by scripts/inject-courts.mjs — do not edit inline) -->
+<style id="poc-courts-style">
+  /* Hide the live courts widget (its data API is dead offline) and show our own
+     working, AI-powered explorer in its place. */
+  #filter-provider-search, #courtstable, #norecordsdiv{display:none !important;}
+  #poc-courts{max-width:1180px;margin:0 auto;padding:8px 24px 8px;}
+  #poc-courts-frame{width:100%;border:0;display:block;min-height:560px;transition:height .15s ease;}
+  @media (max-width:640px){#poc-courts{padding:8px 16px;}}
+</style>
+<script id="poc-courts-script">
+(function(){
+  var TITLES={cases:'Cases',hearings:'Hearings',judgments:'Judgments'};
+  function tabFromPath(){
+    var m=location.pathname.match(/adgm-courts\/(cases|hearings|judgments)/);
+    return (m&&m[1])||'cases';
+  }
+  // Keep the hero title + breadcrumb in step with the active court page.
+  function setTitle(tab){
+    var t=TITLES[tab]||'Cases';
+    var h1=document.querySelector('adgm-hero h1');
+    if(h1)h1.textContent=t;
+    var crumbs=document.querySelectorAll('adgm-breadcrumb');
+    if(crumbs.length){var last=crumbs[crumbs.length-1];if(!last.getAttribute('href'))last.textContent=t;}
+    try{document.title=t+' | ADGM Courts';}catch(e){}
+  }
+
+  function build(){
+    if(document.getElementById('poc-courts'))return;
+    var anchor=document.getElementById('filter-provider-search')||document.querySelector('adgm-filter-provider');
+    if(!anchor||!anchor.parentNode)return;
+
+    var BASE='/adgm-courts';
+    var hostParams=new URLSearchParams(location.search);
+    var seed=new URLSearchParams();
+    var tab0=tabFromPath();
+    seed.set('tab',tab0);
+    if(hostParams.get('q'))seed.set('q',hostParams.get('q'));
+    if(hostParams.get('mode')==='ai')seed.set('mode','ai');
+    if(hostParams.get('page'))seed.set('page',hostParams.get('page'));
+    setTitle(tab0);
+
+    var wrap=document.createElement('div');
+    wrap.id='poc-courts';
+    var frame=document.createElement('iframe');
+    frame.id='poc-courts-frame';
+    frame.title='ADGM Courts — AI search';
+    frame.loading='eager';
+    frame.src='/embed/courts?'+seed.toString();
+    wrap.appendChild(frame);
+    anchor.parentNode.insertBefore(wrap,anchor);
+
+    window.addEventListener('message',function(e){
+      if(!e.data)return;
+      if(e.data.type==='poc-courts-height'&&typeof e.data.height==='number'){
+        frame.style.height=Math.max(560,e.data.height+8)+'px';
+      }
+      else if(e.data.type==='poc-courts-state'){
+        var tab=e.data.tab||'cases';
+        var path=BASE+'/'+tab;
+        var qs=new URLSearchParams();
+        if(e.data.q)qs.set('q',e.data.q);
+        if(e.data.mode==='ai')qs.set('mode','ai');
+        if(e.data.page&&e.data.page>1)qs.set('page',String(e.data.page));
+        var url=path+(qs.toString()?'?'+qs.toString():'');
+        if(url!==location.pathname+location.search)history.replaceState({},'',url);
+        setTitle(tab);
+      }
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',build);
+  else build();
+})();
+</script>
+<!-- POC-COURTS-INJECT:end -->

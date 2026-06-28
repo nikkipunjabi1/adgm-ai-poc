@@ -25,7 +25,15 @@ most work is on the **search experience**, not the crawler.
   endpoint (`lib/register.ts`: classic substring filter over the normalized JSON,
   AI semantic via embeddings + `match_documents`). Tab clicks postMessage the host
   to update its URL; the host passes `?tab=` into the iframe so deep links open the
-  right tab. Result cards use `target="_top"` so they escape the iframe to `/search`.
+  right tab. Result cards open the live ADGM detail page (the record's `url`).
+- `/adgm-courts/cases` (+ `/hearings`, `/judgments`) — cloned ADGM Courts pages;
+  one snapshot (`public/adgm-clone/adgm-courts/cases.html`) serves all three via
+  rewrites. The injected explorer (`/embed/courts`, `lib/courts.ts`, `/api/courts`)
+  replaces the dead listing widget and **swaps the hero title + breadcrumb** to
+  match the path (Cases/Hearings/Judgments). AI mode over-fetches (`match_count`
+  400) then post-filters by `source_id` since the 2,000+ cases would otherwise
+  crowd out hearings/judgments. Court cards deep-link to the filtered ADGM page
+  (`?q=<caseNumber>`; hearings need the full param set). Refresh: `npm run mirror:courts`.
 - `/search`, `/api/search` — search page and streaming endpoint.
 - `/embed/search` — chromeless POC search; the `/` clone embeds it in an iframe.
   The clone's `search-button`/⌘K open it (overlay injected by

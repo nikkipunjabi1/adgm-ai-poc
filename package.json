@@ -15,6 +15,7 @@
     "extract-pdfs": "tsx src/ingestion/extract-pdfs.ts",
     "mirror": "node scripts/mirror-adgm.mjs",
     "mirror:fsra": "node scripts/mirror-fsra.mjs",
+    "mirror:courts": "node scripts/mirror-courts.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

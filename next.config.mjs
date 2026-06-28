@@ -42,6 +42,11 @@ const nextConfig = {
         { source: "/public-registers/fsra/firms", destination: "/adgm-clone/public-registers/fsra.html" },
         { source: "/public-registers/fsra/individuals", destination: "/adgm-clone/public-registers/fsra.html" },
         { source: "/public-registers/fsra/funds", destination: "/adgm-clone/public-registers/fsra.html" },
+        // The ADGM Courts clone — one snapshot serves cases/hearings/judgments;
+        // the injected explorer reads the path to set the active tab + title.
+        { source: "/adgm-courts/cases", destination: "/adgm-clone/adgm-courts/cases.html" },
+        { source: "/adgm-courts/hearings", destination: "/adgm-clone/adgm-courts/cases.html" },
+        { source: "/adgm-courts/judgments", destination: "/adgm-clone/adgm-courts/cases.html" },
       ],
       afterFiles: assetDirs.map((d) => ({
         source: `/${d}/:path*`,
