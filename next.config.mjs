@@ -14,7 +14,9 @@ const nextConfig = {
     "*": ["./src/ingestion/**", "./data/**"],
   },
   // "/" serves the exact mirrored ADGM homepage snapshot (public/adgm-clone).
-  // The working POC homepage lives at "/v1".
+  // "/demo" serves the SAME snapshot, but the injected demo-cards block only
+  // renders there (it is path-gated), so "/" stays pristine. The working POC
+  // homepage lives at "/v1".
   async rewrites() {
     // Root-relative asset paths that the cloned page's JS requests at runtime
     // (e.g. /images/icons/x.svg) — fall back to the mirrored copy under the
@@ -31,7 +33,10 @@ const nextConfig = {
       "media",
     ];
     return {
-      beforeFiles: [{ source: "/", destination: "/adgm-clone/index.html" }],
+      beforeFiles: [
+        { source: "/", destination: "/adgm-clone/index.html" },
+        { source: "/demo", destination: "/adgm-clone/index.html" },
+      ],
       afterFiles: assetDirs.map((d) => ({
         source: `/${d}/:path*`,
         destination: `/adgm-clone/www.adgm.com/${d}/:path*`,

@@ -13,6 +13,8 @@ most work is on the **search experience**, not the crawler.
 
 - `/` — exact mirror of adgm.com (static snapshot in `public/adgm-clone/`, served
   via a `next.config.mjs` rewrite). Refresh with `npm run mirror`.
+- `/demo` — the **same** snapshot via a second rewrite; the injected demo-cards
+  block is path-gated and renders only here (or with `?demo`), so `/` stays clean.
 - `/v1` — the working POC homepage (`app/v1/page.tsx`) + search overlay.
 - `/search`, `/api/search` — search page and streaming endpoint.
 - `/embed/search` — chromeless POC search; the `/` clone embeds it in an iframe.
@@ -23,7 +25,8 @@ most work is on the **search experience**, not the crawler.
 `index.html` (idempotent, in order): the **hero slider** (`clone-hero-fix.html`,
 hides the slow-hydrating `<adgm-hero>` and renders a self-contained crossfade
 slider from the same slide data), the **demo cards** (`clone-demo-cards.html`,
-an interactive showcase strip beneath the hero whose cards link to `/search?q=…`),
+an interactive showcase strip beneath the hero whose cards link to `/search?q=…`;
+path-gated to render only on `/demo` or with `?demo`),
 and the **search overlay** (`clone-search-inject.html`). Order matters: the demo
 script inserts itself after `.poc-hero`, which the hero block builds first. If you
 re-mirror, all three are re-applied automatically. Don't hand-edit the injected

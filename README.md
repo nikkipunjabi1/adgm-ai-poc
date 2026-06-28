@@ -35,6 +35,7 @@ retrieved data, on **entirely free infrastructure** (the LLM aside).
 | Route | What it is |
 |---|---|
 | `/` | **Exact mirror** of the live adgm.com homepage — a self-contained offline snapshot (HTML + all CSS/JS/images/fonts under `public/adgm-clone/`). Served via a Next.js rewrite. Its **search icon (and ⌘K) open the POC search** in an overlay. |
+| `/demo` | The **same clone**, plus an interactive **demo-cards** strip beneath the hero (capability showcase whose cards open `/search?q=…`). Use this surface for demos; `/` stays pristine. |
 | `/v1` | The **POC homepage** (ADGM-styled shell) with the AI search overlay (⌘K / Esc). |
 | `/search` | Full-page search experience. |
 | `/embed/search` | Chromeless search, embedded by the `/` clone via an `<iframe>`. |
@@ -66,7 +67,9 @@ or re-run standalone with `node scripts/inject-search.mjs`):
 - **Demo cards** (`clone-demo-cards.html`) — an interactive strip beneath the hero
   showcasing the POC's capabilities (disambiguation, firm + connections, court
   matters, risk alerts, guided answers, events). Each card links to
-  `/search?q=…`, which auto-runs the query — a quick way to demo the search.
+  `/search?q=…`, which auto-runs the query — a quick way to demo the search. The
+  block is **path-gated**: it renders only on **`/demo`** (or when `?demo` is in
+  the URL), so the plain `/` clone stays pristine.
 
 ## Stack
 
