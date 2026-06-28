@@ -2301,6 +2301,9 @@ document.addEventListener('DOMContentLoaded',function(){if(typeof FindApi === 'f
 
 
 
+
+
+
 <!-- POC-HERO-INJECT:start  (added by scripts/inject-search.mjs — do not edit inline) -->
 <style id="poc-hero-style">
   /* The live ADGM hero is a lit web-component (<adgm-hero>). Offline it hydrates
@@ -2468,15 +2471,6 @@ document.addEventListener('DOMContentLoaded',function(){if(typeof FindApi === 'f
   function svg(p){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+p+'</svg>';}
 
   var DEMOS=[
-    {icon:'register', tag:'Public register', q:'FSRA Public Register',
-     desc:'Browse all 3,560 firms, individuals and funds — classic filtering plus AI semantic search, paginated and deep-linked to ADGM.',
-     href:'/public-registers/fsra', cta:'Open the register'},
-    {icon:'scale',    tag:'Courts explorer',  q:'ADGM Courts search',
-     desc:'Search every case, hearing and judgment — classic filters plus AI semantic search across the three court pages, deep-linked to ADGM.',
-     href:'/adgm-courts/cases', cta:'Open courts search'},
-    {icon:'trending', tag:'Self-learning suggestions', q:'AI-curated suggestions',
-     desc:'The search suggestions re-rank from the week’s most-asked queries, AI-curated by Claude. Opens the operator view — Regenerate or Reset them live in the demo.',
-     href:'/search?admin=token', cta:'Open operator view'},
     {icon:'user',     tag:'Smart disambiguation', q:'Who is Mr. Ali?',
      desc:'A broad question? The AI asks whether you mean an arbitration panelist or an approved person, then narrows to the right people.'},
     {icon:'building', tag:'Firm + connections',   q:"I'm looking for Sarwa",
@@ -2488,7 +2482,16 @@ document.addEventListener('DOMContentLoaded',function(){if(typeof FindApi === 'f
     {icon:'landmark', tag:'Guided answers',       q:'What do I need to set up a fund manager?',
      desc:'A grounded, plain-language answer drawn only from ADGM’s own published guidance — no invented facts.'},
     {icon:'calendar', tag:'What’s on',            q:'Upcoming events at ADGM',
-     desc:'The newest events, forums and summits — sorted so the soonest appear first, with follow-ups to explore.'}
+     desc:'The newest events, forums and summits — sorted so the soonest appear first, with follow-ups to explore.'},
+    {icon:'register', tag:'Public register', q:'FSRA Public Register',
+     desc:'Browse all 3,560 firms, individuals and funds — classic filtering plus AI semantic search, paginated and deep-linked to ADGM.',
+     href:'/public-registers/fsra', cta:'Open the register'},
+    {icon:'scale',    tag:'Courts explorer',  q:'ADGM Courts search',
+     desc:'Search every case, hearing and judgment — classic filters plus AI semantic search across the three court pages, deep-linked to ADGM.',
+     href:'/adgm-courts/cases', cta:'Open courts search'},
+    {icon:'trending', tag:'Self-learning suggestions', q:'AI-curated suggestions',
+     desc:'The search suggestions re-rank from the week’s most-asked queries, AI-curated by Claude. Opens the operator view — Regenerate or Reset them live in the demo.',
+     href:'/search?admin=token', cta:'Open operator view'}
   ];
 
   function build(){
