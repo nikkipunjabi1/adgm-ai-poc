@@ -44,6 +44,9 @@ most work is on the **search experience**, not the crawler.
   week's most-asked queries (`top_search_queries` RPC), **AI-polished by Claude**
   when AI is on, raw trending when off, curated when there's no history. Cached
   ~10 min; `?refresh=1` (the UI **Regenerate** button) re-derives live for demos.
+  `DELETE /api/suggestions` (the **Reset** button) clears the log → back to
+  curated; gated by `SUGGESTIONS_RESET_TOKEN` (required in prod, open in dev).
+  The UI shows Reset on localhost, or after `?admin=<token>` is set once.
   Requires the `search_queries` table + `top_search_queries` fn from
   `supabase/schema.sql`; degrades to curated until they exist.
 

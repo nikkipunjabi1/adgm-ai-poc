@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Sparkles, Search, X, TriangleAlert, Loader2, ArrowRight, RefreshCw, TrendingUp } from "lucide-react";
+import { Sparkles, Search, X, TriangleAlert, Loader2, ArrowRight, RefreshCw, TrendingUp, RotateCcw } from "lucide-react";
 import type { SearchRecord } from "@/lib/search";
 import type { SearchResponse, Alert } from "@/lib/llm";
 import { SearchCard, EventPromo } from "./cards";
@@ -41,7 +41,26 @@ export function SearchExperience({
   const [suggestions, setSuggestions] = useState<string[]>(SUGGESTIONS);
   const [sugSource, setSugSource] = useState<SuggestionSource>("curated");
   const [sugLoading, setSugLoading] = useState(false);
+  const [canReset, setCanReset] = useState(false);
+  const adminToken = useRef<string | null>(null);
   const reqId = useRef(0);
+
+  // Operator-only "Reset" affordance. Visible on localhost, or on any deploy
+  // once an admin token is provided once via ?admin=<token> (then remembered).
+  // The matching SUGGESTIONS_RESET_TOKEN must be set server-side on Vercel.
+  useEffect(() => {
+    try {
+      const sp = new URLSearchParams(window.location.search);
+      const fromUrl = sp.get("admin");
+      if (fromUrl) localStorage.setItem("adgm_admin", fromUrl);
+      const tok = localStorage.getItem("adgm_admin");
+      adminToken.current = tok;
+      const isLocal = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+      setCanReset(isLocal || Boolean(tok));
+    } catch {
+      /* no-op */
+    }
+  }, []);
 
   // Pull the auto-updating suggestions (derived from the week's top queries).
   // `refresh` forces a live re-derive — the demo "Regenerate" button.
@@ -64,6 +83,39 @@ export function SearchExperience({
   useEffect(() => {
     loadSuggestions(false);
   }, [loadSuggestions]);
+
+  // Clear the logged queries → suggestions return to the curated baseline.
+  const resetSuggestions = useCallback(async () => {
+    if (
+      !window.confirm(
+        "Reset suggestions? This clears the logged search queries and returns to the default set.",
+      )
+    )
+      return;
+    setSugLoading(true);
+    try {
+      const tok = adminToken.current;
+      const res = await fetch(`/api/suggestions${tok ? `?token=${encodeURIComponent(tok)}` : ""}`, {
+        method: "DELETE",
+      });
+      const d = (await res.json()) as {
+        ok?: boolean;
+        error?: string;
+        suggestions?: string[];
+        source?: SuggestionSource;
+      };
+      if (res.ok && Array.isArray(d.suggestions)) {
+        setSuggestions(d.suggestions);
+        setSugSource(d.source ?? "curated");
+      } else if (d.error) {
+        window.alert(d.error);
+      }
+    } catch {
+      /* keep current */
+    } finally {
+      setSugLoading(false);
+    }
+  }, []);
 
   const run = useCallback(async (q: string, sels: string[]) => {
     if (!q.trim()) return;
@@ -335,15 +387,28 @@ export function SearchExperience({
                   </>
                 )}
               </p>
-              <button
-                onClick={() => loadSuggestions(true)}
-                disabled={sugLoading}
-                title="Regenerate suggestions from this week's searches"
-                className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium text-adgm-steel transition-colors hover:bg-adgm-brightgrey hover:text-adgm-blue-600 disabled:opacity-50"
-              >
-                <RefreshCw className={cn("h-3.5 w-3.5", sugLoading && "animate-spin")} />
-                Regenerate
-              </button>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => loadSuggestions(true)}
+                  disabled={sugLoading}
+                  title="Regenerate suggestions from this week's searches"
+                  className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium text-adgm-steel transition-colors hover:bg-adgm-brightgrey hover:text-adgm-blue-600 disabled:opacity-50"
+                >
+                  <RefreshCw className={cn("h-3.5 w-3.5", sugLoading && "animate-spin")} />
+                  Regenerate
+                </button>
+                {canReset && (
+                  <button
+                    onClick={resetSuggestions}
+                    disabled={sugLoading}
+                    title="Clear the logged queries and reset suggestions to the default set"
+                    className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium text-adgm-steel transition-colors hover:bg-adgm-error/10 hover:text-adgm-error disabled:opacity-50"
+                  >
+                    <RotateCcw className="h-3.5 w-3.5" />
+                    Reset
+                  </button>
+                )}
+              </div>
             </div>
             <ul className="space-y-1">
               {suggestions.map((s) => (

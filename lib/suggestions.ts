@@ -40,6 +40,20 @@ const TTL_MS = 10 * 60 * 1000; // 10 min
 
 let cache: { at: number; data: SuggestionResult } | null = null;
 
+/**
+ * Clear the entire query log and the cached suggestions, returning suggestions
+ * to the curated baseline. Powers the demo "Reset" control. Best-effort.
+ */
+export async function resetSearchQueries(): Promise<void> {
+  try {
+    // Supabase requires a filter on delete; id is a positive identity column.
+    await serverClient().from("search_queries").delete().gte("id", 0);
+  } catch {
+    /* table may not exist — nothing to reset */
+  }
+  cache = null;
+}
+
 /** Fire-and-forget: record a top-level user query. Never throws. */
 export async function logSearchQuery(query: string): Promise<void> {
   const q = query.trim();
