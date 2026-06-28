@@ -78,3 +78,34 @@ as $$
   select uid, source_id, content_type, title, summary, url, date, fields, relations
   from documents where uid = any(uids);
 $$;
+
+-- ---------------------------------------------------------------------------
+-- Search query log → powers the auto-updating "suggested questions" on the
+-- search UI. Every top-level user query is logged here; suggestions are derived
+-- from the most-asked queries over a trailing window (AI-polished when enabled).
+-- The app logs/reads best-effort, so it runs fine even before this is created.
+-- ---------------------------------------------------------------------------
+create table if not exists search_queries (
+  id         bigint generated always as identity primary key,
+  query      text not null,
+  created_at timestamptz not null default now()
+);
+create index if not exists search_queries_created_at_idx
+  on search_queries (created_at desc);
+
+-- Most-asked queries in the last `since_days`, grouped case-insensitively.
+-- Returns a representative original-cased query per group + its hit count.
+create or replace function top_search_queries (
+  since_days int default 7,
+  max_rows   int default 25
+)
+returns table (query text, hits bigint)
+language sql stable
+as $$
+  select min(query) as query, count(*) as hits
+  from search_queries
+  where created_at >= now() - make_interval(days => since_days)
+  group by lower(btrim(query))
+  order by hits desc, max(created_at) desc
+  limit max_rows;
+$$;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Sparkles, Search, X, TriangleAlert, Loader2, ArrowRight } from "lucide-react";
+import { Sparkles, Search, X, TriangleAlert, Loader2, ArrowRight, RefreshCw, TrendingUp } from "lucide-react";
 import type { SearchRecord } from "@/lib/search";
 import type { SearchResponse, Alert } from "@/lib/llm";
 import { SearchCard, EventPromo } from "./cards";
@@ -10,6 +10,8 @@ import { cn } from "@/lib/utils";
 
 type ApiResult = SearchResponse & { records: Record<string, SearchRecord>; error?: string };
 
+// Initial fallback shown instantly; replaced by the live (auto-updating) set
+// fetched from /api/suggestions on mount.
 const SUGGESTIONS = [
   "Fintech firms licensed in ADGM",
   "Court judgments involving NMC Healthcare",
@@ -17,6 +19,8 @@ const SUGGESTIONS = [
   "Public notices for deregistered companies",
   "Upcoming events at ADGM",
 ];
+
+type SuggestionSource = "trending" | "trending-ai" | "curated";
 
 export function SearchExperience({
   initialQuery = "",
@@ -34,7 +38,32 @@ export function SearchExperience({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [steps, setSteps] = useState<string[]>([]);
+  const [suggestions, setSuggestions] = useState<string[]>(SUGGESTIONS);
+  const [sugSource, setSugSource] = useState<SuggestionSource>("curated");
+  const [sugLoading, setSugLoading] = useState(false);
   const reqId = useRef(0);
+
+  // Pull the auto-updating suggestions (derived from the week's top queries).
+  // `refresh` forces a live re-derive — the demo "Regenerate" button.
+  const loadSuggestions = useCallback(async (refresh: boolean) => {
+    setSugLoading(true);
+    try {
+      const res = await fetch(`/api/suggestions${refresh ? "?refresh=1" : ""}`);
+      const d = (await res.json()) as { suggestions?: string[]; source?: SuggestionSource };
+      if (Array.isArray(d.suggestions) && d.suggestions.length) {
+        setSuggestions(d.suggestions);
+        setSugSource(d.source ?? "curated");
+      }
+    } catch {
+      /* keep whatever's showing */
+    } finally {
+      setSugLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadSuggestions(false);
+  }, [loadSuggestions]);
 
   const run = useCallback(async (q: string, sels: string[]) => {
     if (!q.trim()) return;
@@ -289,11 +318,35 @@ export function SearchExperience({
 
         {!data && !loading && !error && !query.trim() && (
           <div>
-            <p className="mb-2 text-xs font-medium uppercase tracking-wide text-adgm-steel">
-              Suggestions
-            </p>
+            <div className="mb-2 flex items-center justify-between gap-2">
+              <p className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-adgm-steel">
+                {sugSource === "curated" ? (
+                  "Suggestions"
+                ) : (
+                  <>
+                    <TrendingUp className="h-3.5 w-3.5 text-adgm-blue" />
+                    Trending this week
+                    {sugSource === "trending-ai" && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-adgm-blue/10 px-1.5 py-0.5 text-[10px] font-semibold normal-case tracking-normal text-adgm-blue-600">
+                        <Sparkles className="h-2.5 w-2.5" />
+                        AI-curated
+                      </span>
+                    )}
+                  </>
+                )}
+              </p>
+              <button
+                onClick={() => loadSuggestions(true)}
+                disabled={sugLoading}
+                title="Regenerate suggestions from this week's searches"
+                className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium text-adgm-steel transition-colors hover:bg-adgm-brightgrey hover:text-adgm-blue-600 disabled:opacity-50"
+              >
+                <RefreshCw className={cn("h-3.5 w-3.5", sugLoading && "animate-spin")} />
+                Regenerate
+              </button>
+            </div>
             <ul className="space-y-1">
-              {SUGGESTIONS.map((s) => (
+              {suggestions.map((s) => (
                 <li key={s}>
                   <button
                     onClick={() => {

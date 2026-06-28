@@ -1,6 +1,7 @@
 import { retrieve, toContext, type SearchRecord } from "@/lib/search";
 import { generateSearch, generateThinkingSteps } from "@/lib/llm";
 import { aiReady, aiErrorMessage } from "@/lib/ai";
+import { logSearchQuery } from "@/lib/suggestions";
 
 // Transformers.js (query embedding) needs the Node runtime, not Edge.
 export const runtime = "nodejs";
@@ -30,6 +31,10 @@ export async function POST(req: Request) {
           send({ type: "error", error: "Empty query" });
           return;
         }
+
+        // Log the top-level query (not refinement re-runs) to power the
+        // auto-updating suggestions. Fire-and-forget — never blocks the search.
+        if (!selections?.length) void logSearchQuery(query);
 
         // Gate the whole AI search behind the env-driven switch + a valid key.
         const status = await aiReady();

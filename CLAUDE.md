@@ -38,6 +38,14 @@ most work is on the **search experience**, not the crawler.
 - `/embed/search` — chromeless POC search; the `/` clone embeds it in an iframe.
   The clone's `search-button`/⌘K open it (overlay injected by
   `scripts/inject-search.mjs`, run automatically by the mirror).
+- `/api/suggestions` — auto-updating "suggested questions" for the search UI.
+  `/api/search` logs each top-level query to Supabase `search_queries`
+  (`lib/suggestions.ts`, fire-and-forget); suggestions are derived from the
+  week's most-asked queries (`top_search_queries` RPC), **AI-polished by Claude**
+  when AI is on, raw trending when off, curated when there's no history. Cached
+  ~10 min; `?refresh=1` (the UI **Regenerate** button) re-derives live for demos.
+  Requires the `search_queries` table + `top_search_queries` fn from
+  `supabase/schema.sql`; degrades to curated until they exist.
 
 `scripts/inject-search.mjs` injects three marker-bounded blocks into the clone's
 `index.html` (idempotent, in order): the **hero slider** (`clone-hero-fix.html`,
@@ -96,6 +104,13 @@ If `next build` errors with `PageNotFoundError` for a page that clearly exists,
 - **Animations** must be transform-only (never animate opacity to 0 on content),
   so nothing is invisible if an animation pauses in a background tab.
 - **Grounding**: every card uid must come from retrieved records; never invent facts.
+- **AI on/off gate** (`lib/ai.ts`): every AI surface is gated by `AI_ENABLED`
+  (env kill switch) + a present, valid `ANTHROPIC_API_KEY`. `aiConfigured()` is
+  the sync check (switch + key present); `aiReady()` adds a cached, token-free
+  `models.list` auth probe. When unavailable, surfaces show **"AI Key is not
+  available."** and fall back to classic search. Note: register/courts AI
+  semantic mode uses *local* embeddings (no key spent) but is still gated on the
+  same switch so "AI" is one coherent state.
 
 ## Don't
 

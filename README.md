@@ -44,6 +44,7 @@ retrieved data, on **entirely free infrastructure** (the LLM aside).
 | `/search` | Full-page search experience. |
 | `/embed/search` | Chromeless search, embedded by the `/` clone via an `<iframe>`. |
 | `/api/search` | Streaming NDJSON search endpoint. |
+| `/api/suggestions` | Auto-updating suggested questions — derived from the week's most-asked queries (logged to `search_queries`), AI-polished by Claude; `?refresh=1` re-derives live (the UI **Regenerate** button). |
 
 ### Re-mirroring the homepage
 
