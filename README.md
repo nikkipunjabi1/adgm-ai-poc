@@ -51,11 +51,18 @@ themselves; third-party widgets (chat, analytics) are stripped or fail silently
 offline. Root-relative asset paths the JS requests at runtime fall back to the
 clone folder via rewrites in `next.config.mjs`.
 
-After mirroring, `scripts/inject-search.mjs` injects a small overlay into the
-snapshot: clicking the homepage's `search-button` (or ⌘K) opens an `<iframe>` of
-`/embed/search` — so the real POC search works directly from the `/` clone. The
-mirror script runs this automatically; re-run it standalone with
-`node scripts/inject-search.mjs`.
+After mirroring, `scripts/inject-search.mjs` injects two self-contained blocks
+into the snapshot (idempotent, marker-bounded; the mirror runs it automatically,
+or re-run standalone with `node scripts/inject-search.mjs`):
+
+- **Search overlay** (`clone-search-inject.html`) — clicking the homepage's
+  `search-button` (or ⌘K) opens an `<iframe>` of `/embed/search`, so the real POC
+  search works directly from the `/` clone.
+- **Hero slider** (`clone-hero-fix.html`) — the live hero is a lit web component
+  (`<adgm-hero>`) that hydrates slowly offline, so the raw snapshot flashed a blue
+  background and briefly stacked both slides. We hide it and render a lightweight
+  crossfade slider built from the same slide data, so the two hero images always
+  show with no flash (auto-rotates every 5s; clickable dots).
 
 ## Stack
 

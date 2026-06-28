@@ -1,7 +1,10 @@
 /**
- * Inject the POC search overlay into the cloned ADGM homepage.
- * Idempotent: replaces any previous injection (between the marker comments)
- * before adding the current one. Run standalone or via the mirror script.
+ * Inject the POC enhancements into the cloned ADGM homepage:
+ *   - the search overlay (clone-search-inject.html), and
+ *   - the self-contained hero slider (clone-hero-fix.html), which replaces the
+ *     flaky <adgm-hero> web-component so two images always show (no blue flash).
+ * Idempotent: each block is wrapped in marker comments and replaced in place on
+ * re-runs. Run standalone or via the mirror script.
  *
  * Run: node scripts/inject-search.mjs
  */
@@ -11,30 +14,43 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const INDEX = path.join(ROOT, "public", "adgm-clone", "index.html");
-const SNIPPET = path.join(ROOT, "scripts", "clone-search-inject.html");
 
-const START = "<!-- POC-SEARCH-INJECT:start";
-const END = "POC-SEARCH-INJECT:end -->";
+// Each block: snippet file + the marker comments that bound it in the HTML.
+const BLOCKS = [
+  {
+    file: "clone-hero-fix.html",
+    start: "<!-- POC-HERO-INJECT:start",
+    end: "POC-HERO-INJECT:end -->",
+  },
+  {
+    file: "clone-search-inject.html",
+    start: "<!-- POC-SEARCH-INJECT:start",
+    end: "POC-SEARCH-INJECT:end -->",
+  },
+];
 
 export async function injectSearch() {
   let html = await readFile(INDEX, "utf8");
-  const snippet = (await readFile(SNIPPET, "utf8")).trim();
 
-  // Drop any prior injection so re-runs don't stack.
-  const s = html.indexOf(START);
-  const e = html.indexOf(END);
-  if (s !== -1 && e !== -1) {
-    html = html.slice(0, s) + html.slice(e + END.length);
-  }
+  for (const { file, start, end } of BLOCKS) {
+    const snippet = (await readFile(path.join(ROOT, "scripts", file), "utf8")).trim();
 
-  if (html.includes("</body>")) {
-    html = html.replace("</body>", `${snippet}\n</body>`);
-  } else {
-    html += `\n${snippet}\n`;
+    // Drop any prior injection of this block so re-runs don't stack.
+    const s = html.indexOf(start);
+    const e = html.indexOf(end);
+    if (s !== -1 && e !== -1) {
+      html = html.slice(0, s) + html.slice(e + end.length);
+    }
+
+    if (html.includes("</body>")) {
+      html = html.replace("</body>", `${snippet}\n</body>`);
+    } else {
+      html += `\n${snippet}\n`;
+    }
   }
 
   await writeFile(INDEX, html, "utf8");
-  console.log("→ injected POC search overlay into", path.relative(ROOT, INDEX));
+  console.log("→ injected POC search overlay + hero slider into", path.relative(ROOT, INDEX));
 }
 
 // Run directly when invoked as a script.

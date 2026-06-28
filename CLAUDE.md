@@ -19,6 +19,14 @@ most work is on the **search experience**, not the crawler.
   The clone's `search-button`/⌘K open it (overlay injected by
   `scripts/inject-search.mjs`, run automatically by the mirror).
 
+`scripts/inject-search.mjs` injects two marker-bounded blocks into the clone's
+`index.html` (idempotent): the **search overlay** (`clone-search-inject.html`) and
+the **hero slider** (`clone-hero-fix.html`). The latter hides the live
+`<adgm-hero>` web component (it hydrates slowly offline → blue flash + stacked
+slides) and renders a self-contained crossfade slider from the same slide data.
+If you re-mirror, both are re-applied automatically. Don't hand-edit the injected
+blocks in `index.html` — edit the snippet files and re-run the injector.
+
 Don't put an `app/page.tsx` back at the root — it would shadow the clone rewrite.
 If `next build` errors with `PageNotFoundError` for a page that clearly exists,
 `rm -rf .next` and rebuild — a dev server sharing `.next` can leave stale traces.
