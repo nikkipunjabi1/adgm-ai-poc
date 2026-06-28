@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   Building2,
   Landmark,
@@ -129,6 +130,22 @@ function facts(rec: SearchRecord): { label: string; value: string }[] {
   return out.slice(0, 3);
 }
 
+/** Headshot for person/panelist cards. Hides itself if the image fails to load. */
+function Avatar({ src, alt }: { src: string; alt: string }) {
+  const [ok, setOk] = useState(true);
+  if (!ok) return null;
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      alt={alt}
+      loading="lazy"
+      onError={() => setOk(false)}
+      className="h-14 w-14 shrink-0 rounded-full object-cover object-top ring-1 ring-adgm-steel-mist"
+    />
+  );
+}
+
 export function SearchCard({
   rec,
   alert,
@@ -140,6 +157,7 @@ export function SearchCard({
   const Icon = meta.icon;
   const red = alert?.severity === "red";
   const amber = alert?.severity === "amber";
+  const photo = rec.content_type === "person" ? f(rec, "photo") : undefined;
 
   return (
     <a
@@ -163,9 +181,18 @@ export function SearchCard({
         <ExternalLink className="h-3.5 w-3.5 text-adgm-steel opacity-0 transition-opacity group-hover:opacity-100" />
       </div>
 
-      <h4 className="mt-2.5 line-clamp-2 text-sm font-semibold leading-snug text-adgm-navy-900">
-        {rec.title}
-      </h4>
+      {photo ? (
+        <div className="mt-2.5 flex items-center gap-3">
+          <Avatar src={photo} alt={rec.title} />
+          <h4 className="line-clamp-2 text-sm font-semibold leading-snug text-adgm-navy-900">
+            {rec.title}
+          </h4>
+        </div>
+      ) : (
+        <h4 className="mt-2.5 line-clamp-2 text-sm font-semibold leading-snug text-adgm-navy-900">
+          {rec.title}
+        </h4>
+      )}
 
       <dl className="mt-2 space-y-0.5">
         {facts(rec).map((fact) => (
