@@ -1474,6 +1474,7 @@ document.addEventListener('DOMContentLoaded',function(){if(typeof FindApi === 'f
 <script type="text/javascript" id="" charset="">(function(){function b(){var c=document.querySelector("#registration_success");c&&(window.dataLayer=window.dataLayer||[],window.dataLayer.push({event:"registration_success"}),a.disconnect())}var a=new MutationObserver(b);a.observe(document.body,{childList:!0,subtree:!0})})();</script>
 <script type="text/javascript" id="" charset="">(function(){function b(){var c=document.querySelector("#subscription_success");c&&(window.dataLayer=window.dataLayer||[],window.dataLayer.push({event:"subscription_success"}),a.disconnect())}var a=new MutationObserver(b);a.observe(document.body,{childList:!0,subtree:!0})})();</script>
 
+
 <!-- POC-REGISTER-INJECT:start  (added by scripts/inject-register.mjs — do not edit inline) -->
 <style id="poc-register-style">
   /* Hide the live register widget (its data API is dead offline) and show our
@@ -1500,15 +1501,22 @@ document.addEventListener('DOMContentLoaded',function(){if(typeof FindApi === 'f
       return (m&&m[1])||'all';
     }
 
+    // Build the iframe URL from the host's current tab (path) + query string,
+    // so a shared/bookmarked link restores tab, search, mode and page.
+    var hostParams=new URLSearchParams(location.search);
+    var seed=new URLSearchParams();
+    seed.set('tab',tabFromPath());
+    if(hostParams.get('q'))seed.set('q',hostParams.get('q'));
+    if(hostParams.get('mode')==='ai')seed.set('mode','ai');
+    if(hostParams.get('page'))seed.set('page',hostParams.get('page'));
+
     var wrap=document.createElement('div');
     wrap.id='poc-register';
     var frame=document.createElement('iframe');
     frame.id='poc-register-frame';
     frame.title='FSRA Public Register — AI search';
     frame.loading='eager';
-    // Carry the active tab into the iframe so /public-registers/fsra/firms opens Firms.
-    var tab0=tabFromPath();
-    frame.src='/embed/register'+(tab0!=='all'?'?tab='+tab0:'');
+    frame.src='/embed/register?'+seed.toString();
     wrap.appendChild(frame);
     section.parentNode.insertBefore(wrap,section);
 
@@ -1518,10 +1526,16 @@ document.addEventListener('DOMContentLoaded',function(){if(typeof FindApi === 'f
       if(e.data.type==='poc-register-height'&&typeof e.data.height==='number'){
         frame.style.height=Math.max(560,e.data.height+8)+'px';
       }
-      // Reflect the active tab in the host address bar so deep links work.
-      else if(e.data.type==='poc-register-tab'&&e.data.tab){
-        var path=e.data.tab==='all'?BASE:BASE+'/'+e.data.tab;
-        if(location.pathname!==path)history.pushState({pocTab:e.data.tab},'',path);
+      // Reflect tab (in the path) + search/mode/page (in the query string) so
+      // the host address bar is shareable and deep links work.
+      else if(e.data.type==='poc-register-state'){
+        var path=(!e.data.tab||e.data.tab==='all')?BASE:BASE+'/'+e.data.tab;
+        var qs=new URLSearchParams();
+        if(e.data.q)qs.set('q',e.data.q);
+        if(e.data.mode==='ai')qs.set('mode','ai');
+        if(e.data.page&&e.data.page>1)qs.set('page',String(e.data.page));
+        var url=path+(qs.toString()?'?'+qs.toString():'');
+        if(url!==location.pathname+location.search)history.replaceState({},'',url);
       }
     });
   }

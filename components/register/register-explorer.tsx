@@ -10,6 +10,8 @@ import {
   ArrowUpRight,
   Loader2,
   LayoutGrid,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -63,73 +65,116 @@ function statusTone(status?: string): string {
 
 const VALID_TABS = new Set<Tab>(["all", "firms", "individuals", "funds"]);
 
-/** Ask the host page to reflect the active tab in its address bar (deep links).
- *  We run inside an <iframe>, so the parent owns the visible URL. */
-function pushTab(tab: Tab) {
-  if (typeof window === "undefined") return;
-  window.parent?.postMessage({ type: "poc-register-tab", tab }, "*");
+/** Read the initial state the host injected onto the iframe URL
+ *  (tab / q / mode / page) so deep links and reloads restore the view. */
+function readInitialState(): { tab: Tab; query: string; mode: Mode; page: number } {
+  if (typeof window === "undefined") return { tab: "all", query: "", mode: "classic", page: 0 };
+  const sp = new URLSearchParams(window.location.search);
+  const t = sp.get("tab") as Tab | null;
+  const urlPage = parseInt(sp.get("page") ?? "1", 10);
+  return {
+    tab: t && VALID_TABS.has(t) ? t : "all",
+    query: sp.get("q") ?? "",
+    mode: sp.get("mode") === "ai" ? "ai" : "classic",
+    page: Number.isFinite(urlPage) && urlPage > 1 ? urlPage - 1 : 0, // URL is 1-based
+  };
 }
 
-/** The host injects the current tab as ?tab= on the iframe src. */
-function tabFromQuery(): Tab {
-  if (typeof window === "undefined") return "all";
-  const t = new URLSearchParams(window.location.search).get("tab") as Tab | null;
-  return t && VALID_TABS.has(t) ? t : "all";
+/** Tell the host to reflect the current view in its address bar (shareable
+ *  links). We run inside an <iframe>, so the parent owns the visible URL. */
+function syncUrl(tab: Tab, query: string, mode: Mode, page: number) {
+  if (typeof window === "undefined") return;
+  window.parent?.postMessage(
+    { type: "poc-register-state", tab, q: query, mode, page: page + 1 },
+    "*",
+  );
 }
 
 export function RegisterExplorer() {
+  // Start from SSR-safe defaults, then restore the URL state after mount so
+  // hydration matches the server render.
   const [tab, setTab] = useState<Tab>("all");
   const [mode, setMode] = useState<Mode>("classic");
   const [input, setInput] = useState("");
+  const [page, setPage] = useState(0);
+  const [ready, setReady] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
   const [loading, setLoading] = useState(false);
-  const [shown, setShown] = useState(PAGE_SIZE);
   const reqId = useRef(0);
 
-  // Pick up the tab from the iframe's ?tab= on mount (so /…/firms opens Firms).
   useEffect(() => {
-    setTab(tabFromQuery());
+    const init = readInitialState();
+    setTab(init.tab);
+    setMode(init.mode);
+    setInput(init.query);
+    setPage(init.page);
+    setReady(true);
   }, []);
 
-  const run = useCallback(
-    async (tab: Tab, query: string, mode: Mode) => {
-      const id = ++reqId.current;
-      setLoading(true);
-      try {
-        const params = new URLSearchParams({
-          tab,
-          q: query,
-          mode,
-          page: "0",
-          pageSize: "200",
-        });
-        const res = await fetch(`/api/register?${params}`);
-        const data = (await res.json()) as Result;
-        if (id !== reqId.current) return;
-        setResult(data);
-        setShown(PAGE_SIZE);
-      } catch {
-        if (id === reqId.current) setResult({ items: [], total: 0, mode, counts: { firm: 0, individual: 0, fund: 0 } });
-      } finally {
-        if (id === reqId.current) setLoading(false);
-      }
-    },
-    [],
-  );
+  const run = useCallback(async (tab: Tab, query: string, mode: Mode, page: number) => {
+    const id = ++reqId.current;
+    setLoading(true);
+    try {
+      const params = new URLSearchParams({
+        tab,
+        q: query,
+        mode,
+        page: String(page),
+        pageSize: String(PAGE_SIZE),
+      });
+      const res = await fetch(`/api/register?${params}`);
+      const data = (await res.json()) as Result;
+      if (id !== reqId.current) return;
+      setResult(data);
+    } catch {
+      if (id === reqId.current)
+        setResult({ items: [], total: 0, mode, counts: { firm: 0, individual: 0, fund: 0 } });
+    } finally {
+      if (id === reqId.current) setLoading(false);
+    }
+  }, []);
 
-  // Debounced search whenever tab / query / mode changes.
+  // Debounced fetch whenever the query view changes (tab / text / mode / page).
   useEffect(() => {
-    const t = setTimeout(() => run(tab, input, mode), mode === "ai" ? 350 : 150);
+    if (!ready) return;
+    const t = setTimeout(() => run(tab, input, mode, page), mode === "ai" ? 350 : 150);
     return () => clearTimeout(t);
-  }, [tab, input, mode, run]);
+  }, [ready, tab, input, mode, page, run]);
 
+  // Keep the host address bar in sync.
+  useEffect(() => {
+    if (!ready) return;
+    syncUrl(tab, input, mode, page);
+  }, [ready, tab, input, mode, page]);
+
+  // Changing the tab / query / mode resets paging back to the first page.
   const onTab = (t: Tab) => {
     setTab(t);
-    pushTab(t);
+    setPage(0);
+  };
+  const onInput = (v: string) => {
+    setInput(v);
+    setPage(0);
+  };
+  const onMode = () => {
+    setMode((m) => (m === "ai" ? "classic" : "ai"));
+    setPage(0);
   };
 
   const items = result?.items ?? [];
-  const visible = items.slice(0, shown);
+  const total = result?.total ?? 0;
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const from = total === 0 ? 0 : page * PAGE_SIZE + 1;
+  const to = Math.min(total, page * PAGE_SIZE + items.length);
+
+  const goTo = (p: number) => {
+    const next = Math.min(totalPages - 1, Math.max(0, p));
+    if (next !== page) {
+      setPage(next);
+      // scroll the embed back to the top of the list on page change
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   return (
     <div className="font-sans">
@@ -162,7 +207,7 @@ export function RegisterExplorer() {
           <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-adgm-steel" />
           <input
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={(e) => onInput(e.target.value)}
             placeholder={
               mode === "ai"
                 ? "Describe what you're looking for — e.g. “crypto trading firms”"
@@ -173,7 +218,7 @@ export function RegisterExplorer() {
         </div>
 
         <button
-          onClick={() => setMode((m) => (m === "ai" ? "classic" : "ai"))}
+          onClick={onMode}
           aria-pressed={mode === "ai"}
           title="Toggle AI semantic search"
           className={cn(
@@ -211,8 +256,16 @@ export function RegisterExplorer() {
         ) : result ? (
           <>
             <span>
-              <strong className="font-semibold text-adgm-ink/80">{result.total}</strong>{" "}
-              {result.total === 1 ? "result" : "results"}
+              {total > 0 ? (
+                <>
+                  <strong className="font-semibold text-adgm-ink/80">
+                    {from.toLocaleString()}–{to.toLocaleString()}
+                  </strong>{" "}
+                  of <strong className="font-semibold text-adgm-ink/80">{total.toLocaleString()}</strong>
+                </>
+              ) : (
+                <strong className="font-semibold text-adgm-ink/80">0 results</strong>
+              )}
               {input.trim() && (
                 <>
                   {" "}
@@ -226,7 +279,7 @@ export function RegisterExplorer() {
                 AI-ranked by relevance
               </span>
             )}
-            {tab === "all" && result.total > 0 && (
+            {tab === "all" && total > 0 && (
               <span className="hidden sm:inline">
                 {result.counts.firm} firms · {result.counts.individual} individuals ·{" "}
                 {result.counts.fund} funds
@@ -245,24 +298,101 @@ export function RegisterExplorer() {
           </p>
         </div>
       ) : (
-        <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
-          {visible.map((it) => (
+        <div
+          className={cn(
+            "mt-3 grid grid-cols-1 gap-3 transition-opacity md:grid-cols-2",
+            loading && "opacity-50",
+          )}
+        >
+          {items.map((it) => (
             <RegisterRow key={it.uid} item={it} />
           ))}
         </div>
       )}
 
-      {items.length > shown && (
-        <div className="mt-6 flex justify-center">
-          <button
-            onClick={() => setShown((n) => n + PAGE_SIZE)}
-            className="rounded-full border border-adgm-steel-mist bg-white px-6 py-2.5 text-sm font-semibold text-adgm-ink/70 transition-colors hover:border-adgm-blue/40 hover:text-adgm-blue-600"
-          >
-            Show more ({items.length - shown})
-          </button>
-        </div>
-      )}
+      <Pager page={page} totalPages={totalPages} onGo={goTo} />
     </div>
+  );
+}
+
+/** Compact numeric pager: ‹ Prev · 1 … c-1 c c+1 … last · Next › */
+function Pager({
+  page,
+  totalPages,
+  onGo,
+}: {
+  page: number;
+  totalPages: number;
+  onGo: (p: number) => void;
+}) {
+  if (totalPages <= 1) return null;
+
+  // Build a windowed list of page numbers (0-based) with -1 marking an ellipsis.
+  const nums: number[] = [];
+  const push = (n: number) => {
+    if (n >= 0 && n < totalPages && !nums.includes(n)) nums.push(n);
+  };
+  push(0);
+  for (let d = -1; d <= 1; d++) push(page + d);
+  push(totalPages - 1);
+  nums.sort((a, b) => a - b);
+  const withGaps: number[] = [];
+  nums.forEach((n, i) => {
+    if (i > 0 && n - nums[i - 1]! > 1) withGaps.push(-1);
+    withGaps.push(n);
+  });
+
+  const btn =
+    "inline-flex h-9 min-w-9 items-center justify-center rounded-lg px-2.5 text-sm font-medium transition-colors";
+
+  return (
+    <nav className="mt-7 flex items-center justify-center gap-1.5" aria-label="Register pages">
+      <button
+        onClick={() => onGo(page - 1)}
+        disabled={page === 0}
+        className={cn(
+          btn,
+          "border border-adgm-steel-mist text-adgm-ink/70 hover:border-adgm-blue/40 hover:text-adgm-blue-600 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-adgm-steel-mist disabled:hover:text-adgm-ink/70",
+        )}
+        aria-label="Previous page"
+      >
+        <ChevronLeft className="h-4 w-4" />
+      </button>
+
+      {withGaps.map((n, i) =>
+        n === -1 ? (
+          <span key={`gap-${i}`} className="px-1 text-adgm-steel">
+            …
+          </span>
+        ) : (
+          <button
+            key={n}
+            onClick={() => onGo(n)}
+            aria-current={n === page ? "page" : undefined}
+            className={cn(
+              btn,
+              n === page
+                ? "bg-adgm-blue text-white shadow-sm"
+                : "border border-adgm-steel-mist text-adgm-ink/70 hover:border-adgm-blue/40 hover:text-adgm-blue-600",
+            )}
+          >
+            {n + 1}
+          </button>
+        ),
+      )}
+
+      <button
+        onClick={() => onGo(page + 1)}
+        disabled={page >= totalPages - 1}
+        className={cn(
+          btn,
+          "border border-adgm-steel-mist text-adgm-ink/70 hover:border-adgm-blue/40 hover:text-adgm-blue-600 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-adgm-steel-mist disabled:hover:text-adgm-ink/70",
+        )}
+        aria-label="Next page"
+      >
+        <ChevronRight className="h-4 w-4" />
+      </button>
+    </nav>
   );
 }
 
