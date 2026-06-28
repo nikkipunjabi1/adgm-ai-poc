@@ -36,6 +36,12 @@ const nextConfig = {
       beforeFiles: [
         { source: "/", destination: "/adgm-clone/index.html" },
         { source: "/demo", destination: "/adgm-clone/index.html" },
+        // The FSRA Public Register clone — one snapshot serves all four tab URLs;
+        // the injected explorer reads the path to set the active tab.
+        { source: "/public-registers/fsra", destination: "/adgm-clone/public-registers/fsra.html" },
+        { source: "/public-registers/fsra/firms", destination: "/adgm-clone/public-registers/fsra.html" },
+        { source: "/public-registers/fsra/individuals", destination: "/adgm-clone/public-registers/fsra.html" },
+        { source: "/public-registers/fsra/funds", destination: "/adgm-clone/public-registers/fsra.html" },
       ],
       afterFiles: assetDirs.map((d) => ({
         source: `/${d}/:path*`,

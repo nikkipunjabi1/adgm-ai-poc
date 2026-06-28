@@ -35,7 +35,13 @@ function localWebPath(u) {
   return `/adgm-clone/${url.host}${p}`;
 }
 
-async function main() {
+/**
+ * Mirror a single ADGM page into `outFile` (an absolute path under public/).
+ * Captures every static asset it loads, rewrites URLs to local copies, and
+ * keeps the page's scripts so its custom web components hydrate. Reused by the
+ * homepage mirror (below) and by scripts/mirror-fsra.mjs.
+ */
+export async function mirrorPage(target, outFile) {
   const assets = new Map(); // absoluteUrl -> { body, webPath }
   const browser = await chromium.launch();
   const page = await browser.newPage({
@@ -58,8 +64,8 @@ async function main() {
     }
   });
 
-  console.log("→ loading", TARGET);
-  await page.goto(TARGET, { waitUntil: "networkidle", timeout: 90000 });
+  console.log("→ loading", target);
+  await page.goto(target, { waitUntil: "networkidle", timeout: 90000 });
 
   // Accept cookies so the consent overlay clears and gated assets load.
   for (const sel of [
@@ -146,16 +152,23 @@ async function main() {
   // a tiny banner comment so it's clear this is the mirrored snapshot
   html = html.replace(/<head>/i, "<head>\n<!-- Mirrored snapshot of www.adgm.com for the ADGM AI Search POC -->");
 
-  await mkdir(OUT, { recursive: true });
-  await writeFile(path.join(OUT, "index.html"), html, "utf8");
-  console.log("→ wrote", path.join(OUT, "index.html"));
+  await mkdir(path.dirname(outFile), { recursive: true });
+  await writeFile(outFile, html, "utf8");
+  console.log("→ wrote", outFile);
+}
 
-  // Wire the POC search overlay into the snapshot.
+// Homepage mirror: render "/" then wire in the POC search overlay + hero slider
+// + demo cards.
+async function main() {
+  await mirrorPage(TARGET, path.join(OUT, "index.html"));
   await injectSearch();
   console.log("done.");
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+// Run the homepage mirror only when invoked directly (not when imported).
+if (process.argv[1] && process.argv[1].endsWith("mirror-adgm.mjs")) {
+  main().catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
+}

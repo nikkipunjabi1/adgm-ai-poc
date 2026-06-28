@@ -36,6 +36,9 @@ retrieved data, on **entirely free infrastructure** (the LLM aside).
 |---|---|
 | `/` | **Exact mirror** of the live adgm.com homepage — a self-contained offline snapshot (HTML + all CSS/JS/images/fonts under `public/adgm-clone/`). Served via a Next.js rewrite. Its **search icon (and ⌘K) open the POC search** in an overlay. |
 | `/demo` | The **same clone**, plus an interactive **demo-cards** strip beneath the hero (capability showcase whose cards open `/search?q=…`). Use this surface for demos; `/` stays pristine. |
+| `/public-registers/fsra` (+ `/firms`, `/individuals`, `/funds`) | **Cloned FSRA Public Register** whose dead register widget is replaced by a working, AI-powered explorer over our firms/individuals/funds data — tabbed, with classic keyword **and** semantic (AI) search; results deep-link into `/search`. |
+| `/embed/register` | Chromeless register explorer, embedded inline by the FSRA clone via an `<iframe>`. |
+| `/api/register` | Register search endpoint (classic substring filter + AI semantic via embeddings). |
 | `/v1` | The **POC homepage** (ADGM-styled shell) with the AI search overlay (⌘K / Esc). |
 | `/search` | Full-page search experience. |
 | `/embed/search` | Chromeless search, embedded by the `/` clone via an `<iframe>`. |
@@ -44,7 +47,8 @@ retrieved data, on **entirely free infrastructure** (the LLM aside).
 ### Re-mirroring the homepage
 
 ```bash
-npm run mirror   # re-renders adgm.com with Playwright and refreshes public/adgm-clone
+npm run mirror        # re-renders adgm.com (homepage) and refreshes public/adgm-clone
+npm run mirror:fsra   # re-renders the FSRA Public Register page + injects the AI explorer
 ```
 
 The mirror keeps the page's scripts so its custom web components hydrate and style

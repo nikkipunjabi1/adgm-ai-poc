@@ -16,6 +16,16 @@ most work is on the **search experience**, not the crawler.
 - `/demo` — the **same** snapshot via a second rewrite; the injected demo-cards
   block is path-gated and renders only here (or with `?demo`), so `/` stays clean.
 - `/v1` — the working POC homepage (`app/v1/page.tsx`) + search overlay.
+- `/public-registers/fsra` (+ `/firms`, `/individuals`, `/funds`) — cloned FSRA
+  Public Register; one snapshot (`public/adgm-clone/public-registers/fsra.html`)
+  serves all four tab URLs via `next.config.mjs` rewrites. The dead live widget is
+  hidden and replaced (injected iframe) by the **register explorer** at
+  `/embed/register`. Refresh with `npm run mirror:fsra`.
+- `/embed/register`, `/api/register` — chromeless register explorer + its data
+  endpoint (`lib/register.ts`: classic substring filter over the normalized JSON,
+  AI semantic via embeddings + `match_documents`). Tab clicks postMessage the host
+  to update its URL; the host passes `?tab=` into the iframe so deep links open the
+  right tab. Result cards use `target="_top"` so they escape the iframe to `/search`.
 - `/search`, `/api/search` — search page and streaming endpoint.
 - `/embed/search` — chromeless POC search; the `/` clone embeds it in an iframe.
   The clone's `search-button`/⌘K open it (overlay injected by

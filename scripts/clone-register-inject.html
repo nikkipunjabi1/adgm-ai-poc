@@ -1,0 +1,56 @@
+<!-- POC-REGISTER-INJECT:start  (added by scripts/inject-register.mjs — do not edit inline) -->
+<style id="poc-register-style">
+  /* Hide the live register widget (its data API is dead offline) and show our
+     own working, AI-powered explorer in its place. */
+  .white-box, .inner-box, #all-tab-wrapper-div, #norecordsdiv, .tabfilter, .allTabSearch{display:none !important;}
+  #poc-register{max-width:1180px;margin:0 auto;padding:8px 24px 8px;}
+  #poc-register-frame{width:100%;border:0;display:block;min-height:560px;
+    transition:height .15s ease;}
+  @media (max-width:640px){#poc-register{padding:8px 16px;}}
+</style>
+<script id="poc-register-script">
+(function(){
+  function build(){
+    if(document.getElementById('poc-register'))return;
+    // Anchor on the live register's tab panel, then drop our explorer in front
+    // of it. (The original markup is hidden by the CSS above.)
+    var anchorEl=document.querySelector('.white-box')||document.querySelector('.main-tab-group');
+    var section=anchorEl?(anchorEl.closest('adgm-section')||anchorEl.closest('adgm-container')||anchorEl.parentNode):null;
+    if(!section||!section.parentNode)return;
+
+    var BASE='/public-registers/fsra';
+    function tabFromPath(){
+      var m=location.pathname.match(/public-registers\/fsra\/(firms|individuals|funds)/);
+      return (m&&m[1])||'all';
+    }
+
+    var wrap=document.createElement('div');
+    wrap.id='poc-register';
+    var frame=document.createElement('iframe');
+    frame.id='poc-register-frame';
+    frame.title='FSRA Public Register — AI search';
+    frame.loading='eager';
+    // Carry the active tab into the iframe so /public-registers/fsra/firms opens Firms.
+    var tab0=tabFromPath();
+    frame.src='/embed/register'+(tab0!=='all'?'?tab='+tab0:'');
+    wrap.appendChild(frame);
+    section.parentNode.insertBefore(wrap,section);
+
+    window.addEventListener('message',function(e){
+      if(!e.data)return;
+      // Grow/shrink the iframe to fit its content (reported by the embed page).
+      if(e.data.type==='poc-register-height'&&typeof e.data.height==='number'){
+        frame.style.height=Math.max(560,e.data.height+8)+'px';
+      }
+      // Reflect the active tab in the host address bar so deep links work.
+      else if(e.data.type==='poc-register-tab'&&e.data.tab){
+        var path=e.data.tab==='all'?BASE:BASE+'/'+e.data.tab;
+        if(location.pathname!==path)history.pushState({pocTab:e.data.tab},'',path);
+      }
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',build);
+  else build();
+})();
+</script>
+<!-- POC-REGISTER-INJECT:end -->

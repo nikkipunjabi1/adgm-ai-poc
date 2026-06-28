@@ -14,6 +14,7 @@
     "ingest": "tsx src/ingestion/cli.ts",
     "extract-pdfs": "tsx src/ingestion/extract-pdfs.ts",
     "mirror": "node scripts/mirror-adgm.mjs",
+    "mirror:fsra": "node scripts/mirror-fsra.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
