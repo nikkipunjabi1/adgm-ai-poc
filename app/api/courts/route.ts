@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { searchCourts, type CourtTab } from "@/lib/courts";
 
 export const runtime = "nodejs";
+export const maxDuration = 60;
 
 const TABS = new Set<CourtTab>(["cases", "hearings", "judgments"]);
 

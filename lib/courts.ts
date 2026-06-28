@@ -9,6 +9,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { serverClient } from "./supabase";
 import { embed } from "./embeddings";
+import { aiConfigured, aiReady } from "./ai";
 
 export type CourtTab = "cases" | "hearings" | "judgments";
 export type CourtType = "case" | "hearing" | "judgment";
@@ -31,6 +32,10 @@ export interface CourtResult {
   items: CourtItem[];
   total: number;
   mode: "classic" | "ai";
+  /** Whether the AI toggle should be offered at all (env switch + key present). */
+  aiAvailable: boolean;
+  /** Set when AI was requested but unavailable; results fell back to classic. */
+  aiError?: string;
 }
 
 type Raw = {
@@ -161,11 +166,21 @@ export async function searchCourts(opts: {
 }): Promise<CourtResult> {
   const tab = opts.tab ?? "cases";
   const query = (opts.query ?? "").trim();
-  const mode = opts.mode === "ai" && query ? "ai" : "classic";
   const page = Math.max(0, opts.page ?? 0);
   const pageSize = Math.min(48, Math.max(1, opts.pageSize ?? 12));
+  const aiAvailable = aiConfigured();
+
+  let mode: "classic" | "ai" = opts.mode === "ai" && query ? "ai" : "classic";
+  let aiError: string | undefined;
+  if (mode === "ai") {
+    const status = await aiReady();
+    if (!status.ok) {
+      mode = "classic";
+      aiError = status.message;
+    }
+  }
 
   const all = mode === "ai" ? await ai(tab, query) : await classic(tab, query);
   const start = page * pageSize;
-  return { items: all.slice(start, start + pageSize), total: all.length, mode };
+  return { items: all.slice(start, start + pageSize), total: all.length, mode, aiAvailable, aiError };
 }

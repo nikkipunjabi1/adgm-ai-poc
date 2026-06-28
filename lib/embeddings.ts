@@ -3,10 +3,16 @@
  * mean-pooled + normalized → cosine similarity). The model loads once per
  * process and is cached; used both at ingest (bulk) and at query time.
  */
-import { pipeline, type FeatureExtractionPipeline } from "@xenova/transformers";
+import { env, pipeline, type FeatureExtractionPipeline } from "@xenova/transformers";
 
 export const EMBED_DIM = 384;
 const MODEL = "Xenova/all-MiniLM-L6-v2";
+
+// On serverless (Vercel) the in-package model cache is read-only — only /tmp is
+// writable — so point Transformers.js there. Honour TRANSFORMERS_CACHE if set.
+if (process.env.TRANSFORMERS_CACHE || process.env.VERCEL) {
+  env.cacheDir = process.env.TRANSFORMERS_CACHE || "/tmp/transformers-cache";
+}
 
 let extractorPromise: Promise<FeatureExtractionPipeline> | null = null;
 

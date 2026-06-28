@@ -9,9 +9,19 @@ const nextConfig = {
   // runtime server externals rather than bundling them.
   serverExternalPackages: ["@xenova/transformers", "onnxruntime-node", "sharp"],
   // The ingestion code under src/ingestion is Node-only (Playwright etc.) and
-  // is never imported by the app; keep it out of the build graph.
+  // is never imported by the app; keep the heavy/regenerable data out too.
+  // NOTE: do NOT exclude data/normalized — the register/courts/v1 routes read
+  // those JSON files at runtime via fs, and Next can't statically trace a
+  // dynamic readFile(), so they must be force-included below.
   outputFileTracingExcludes: {
-    "*": ["./src/ingestion/**", "./data/**"],
+    "*": ["./src/ingestion/**", "./data/raw/**", "./data/pdfs/**", "./data/*.log"],
+  },
+  // Force the normalized dataset into the serverless bundles that read it (the
+  // whole set is ~12 MB). Without this, register/courts return empty on Vercel.
+  outputFileTracingIncludes: {
+    "/api/register": ["./data/normalized/*.json"],
+    "/api/courts": ["./data/normalized/*.json"],
+    "/v1": ["./data/normalized/*.json"],
   },
   // "/" serves the exact mirrored ADGM homepage snapshot (public/adgm-clone).
   // "/demo" serves the SAME snapshot, but the injected demo-cards block only

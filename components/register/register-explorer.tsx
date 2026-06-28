@@ -36,6 +36,8 @@ interface Result {
   total: number;
   mode: Mode;
   counts: { firm: number; individual: number; fund: number };
+  aiAvailable?: boolean;
+  aiError?: string;
 }
 
 const TABS: { key: Tab; label: string; icon: typeof Building2 }[] = [
@@ -126,6 +128,9 @@ export function RegisterExplorer() {
       const data = (await res.json()) as Result;
       if (id !== reqId.current) return;
       setResult(data);
+      // If AI was requested but unavailable, the server fell back to classic —
+      // flip the toggle back so the UI reflects what actually ran.
+      if (data.aiError) setMode("classic");
     } catch {
       if (id === reqId.current)
         setResult({ items: [], total: 0, mode, counts: { firm: 0, individual: 0, fund: 0 } });
@@ -156,7 +161,10 @@ export function RegisterExplorer() {
     setInput(v);
     setPage(0);
   };
+  // AI is offered unless the server reports it's switched off / keyless.
+  const aiAvailable = result?.aiAvailable !== false;
   const onMode = () => {
+    if (!aiAvailable) return;
     setMode((m) => (m === "ai" ? "classic" : "ai"));
     setPage(0);
   };
@@ -220,12 +228,15 @@ export function RegisterExplorer() {
         <button
           onClick={onMode}
           aria-pressed={mode === "ai"}
-          title="Toggle AI semantic search"
+          disabled={!aiAvailable}
+          title={aiAvailable ? "Toggle AI semantic search" : "AI Key is not available."}
           className={cn(
             "group flex shrink-0 items-center gap-2 rounded-xl px-4 py-3.5 text-sm font-semibold transition-all",
-            mode === "ai"
-              ? "bg-gradient-to-r from-adgm-blue to-adgm-navy-500 text-white shadow-glow"
-              : "border border-adgm-steel-mist bg-white text-adgm-ink/70 hover:border-adgm-blue/40 hover:text-adgm-blue-600",
+            !aiAvailable
+              ? "cursor-not-allowed border border-adgm-steel-mist bg-adgm-brightgrey/60 text-adgm-ink/35"
+              : mode === "ai"
+                ? "bg-gradient-to-r from-adgm-blue to-adgm-navy-500 text-white shadow-glow"
+                : "border border-adgm-steel-mist bg-white text-adgm-ink/70 hover:border-adgm-blue/40 hover:text-adgm-blue-600",
           )}
         >
           <Sparkles className={cn("h-4 w-4", mode === "ai" && "animate-pulse")} />
@@ -245,6 +256,16 @@ export function RegisterExplorer() {
           </span>
         </button>
       </div>
+
+      {/* AI-unavailable notice (env switch off, or key missing/invalid) -- */}
+      {(!aiAvailable || result?.aiError) && (
+        <div className="mt-3 flex items-center gap-2 rounded-lg border border-amber-300/60 bg-amber-50 px-3 py-2 text-[13px] text-amber-800">
+          <Sparkles className="h-3.5 w-3.5 shrink-0" />
+          <span>
+            {result?.aiError ?? "AI Key is not available."} Keyword search is fully available.
+          </span>
+        </div>
+      )}
 
       {/* Result meta line ------------------------------------------------ */}
       <div className="mt-4 flex min-h-[22px] items-center gap-3 text-[13px] text-adgm-ink/55">

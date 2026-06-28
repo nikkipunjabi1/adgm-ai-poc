@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { searchRegister, type RegisterTab } from "@/lib/register";
 
-// Embeddings (AI mode) need the Node runtime.
+// Embeddings (AI mode) need the Node runtime; allow headroom for the cold-start
+// model load on serverless.
 export const runtime = "nodejs";
+export const maxDuration = 60;
 
 const TABS = new Set<RegisterTab>(["all", "firms", "individuals", "funds"]);
 

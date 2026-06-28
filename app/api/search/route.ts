@@ -1,5 +1,6 @@
 import { retrieve, toContext, type SearchRecord } from "@/lib/search";
 import { generateSearch, generateThinkingSteps } from "@/lib/llm";
+import { aiReady, aiErrorMessage } from "@/lib/ai";
 
 // Transformers.js (query embedding) needs the Node runtime, not Edge.
 export const runtime = "nodejs";
@@ -27,6 +28,13 @@ export async function POST(req: Request) {
       try {
         if (!query || !query.trim()) {
           send({ type: "error", error: "Empty query" });
+          return;
+        }
+
+        // Gate the whole AI search behind the env-driven switch + a valid key.
+        const status = await aiReady();
+        if (!status.ok) {
+          send({ type: "error", error: status.message });
           return;
         }
 
@@ -63,7 +71,7 @@ export async function POST(req: Request) {
         send({ type: "result", ...llm, records });
       } catch (err) {
         console.error("search error:", err);
-        send({ type: "error", error: err instanceof Error ? err.message : "Search failed" });
+        send({ type: "error", error: aiErrorMessage(err) });
       } finally {
         controller.close();
       }

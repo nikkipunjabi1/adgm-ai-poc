@@ -12,6 +12,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { serverClient } from "./supabase";
 import { embed } from "./embeddings";
+import { aiConfigured, aiReady } from "./ai";
 
 export type RegisterTab = "all" | "firms" | "individuals" | "funds";
 export type RegisterType = "firm" | "individual" | "fund";
@@ -34,6 +35,10 @@ export interface RegisterResult {
   total: number;
   mode: "classic" | "ai";
   counts: { firm: number; individual: number; fund: number };
+  /** Whether the AI toggle should be offered at all (env switch + key present). */
+  aiAvailable: boolean;
+  /** Set when AI was requested but unavailable; results fell back to classic. */
+  aiError?: string;
 }
 
 type Raw = {
@@ -186,9 +191,21 @@ export async function searchRegister(opts: {
 }): Promise<RegisterResult> {
   const tab = opts.tab ?? "all";
   const query = (opts.query ?? "").trim();
-  const mode = opts.mode === "ai" && query ? "ai" : "classic";
   const page = Math.max(0, opts.page ?? 0);
   const pageSize = Math.min(48, Math.max(1, opts.pageSize ?? 12));
+  const aiAvailable = aiConfigured();
+
+  // Only run AI semantic search if it was asked for AND it's actually available;
+  // otherwise fall back to classic and report why.
+  let mode: "classic" | "ai" = opts.mode === "ai" && query ? "ai" : "classic";
+  let aiError: string | undefined;
+  if (mode === "ai") {
+    const status = await aiReady();
+    if (!status.ok) {
+      mode = "classic";
+      aiError = status.message;
+    }
+  }
 
   const all = mode === "ai" ? await ai(tab, query) : await classic(tab, query);
 
@@ -201,5 +218,7 @@ export async function searchRegister(opts: {
     total: all.length,
     mode,
     counts,
+    aiAvailable,
+    aiError,
   };
 }
