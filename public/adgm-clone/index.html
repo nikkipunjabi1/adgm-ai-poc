@@ -2295,6 +2295,9 @@ document.addEventListener('DOMContentLoaded',function(){if(typeof FindApi === 'f
 
 
 
+
+
+
 <!-- POC-HERO-INJECT:start  (added by scripts/inject-search.mjs — do not edit inline) -->
 <style id="poc-hero-style">
   /* The live ADGM hero is a lit web-component (<adgm-hero>). Offline it hydrates
@@ -2343,6 +2346,15 @@ document.addEventListener('DOMContentLoaded',function(){if(typeof FindApi === 'f
         bh: btn ? (btn.getAttribute('href')||'#') : ''
       };
     }).filter(function(d){return d.img;});
+
+    // Lead with a branded slide that sends visitors to the AI Search demo.
+    data.unshift({
+      bg:'radial-gradient(120% 140% at 12% 18%, #0088FF 0%, #001C7D 46%, #00092A 100%)',
+      tag:'AI-powered search · POC',
+      title:'Find anything across ADGM,<br>in one intelligent search',
+      bt:'Explore the AI Demo',
+      bh:'/demo'
+    });
     if(!data.length)return;
 
     var wrap=document.createElement('section');
@@ -2353,7 +2365,7 @@ document.addEventListener('DOMContentLoaded',function(){if(typeof FindApi === 'f
     data.forEach(function(d,i){
       var sl=document.createElement('div');
       sl.className='poc-hero__slide'+(i===0?' on':'');
-      sl.style.backgroundImage='url("'+d.img+'")';
+      sl.style.backgroundImage=d.bg?d.bg:'url("'+d.img+'")';
       sl.innerHTML='<div class="poc-hero__scrim"></div>'+
         '<div class="poc-hero__c"><div class="poc-hero__in">'+
           '<p class="poc-hero__tag">'+d.tag+'</p>'+
