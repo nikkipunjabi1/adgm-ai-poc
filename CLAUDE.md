@@ -46,7 +46,9 @@ most work is on the **search experience**, not the crawler.
   ~10 min; `?refresh=1` (the UI **Regenerate** button) re-derives live for demos.
   `DELETE /api/suggestions` (the **Reset** button) clears the log → back to
   curated; gated by `SUGGESTIONS_RESET_TOKEN` (required in prod, open in dev).
-  The UI shows Reset on localhost, or after `?admin=<token>` is set once.
+  The operator controls (**Regenerate** + **Reset**) are hidden from visitors —
+  they appear only after `?admin=<token>` is set once (kept in localStorage;
+  clear with `?admin=`). Suggestions themselves still show for everyone.
   Requires the `search_queries` table + `top_search_queries` fn from
   `supabase/schema.sql`; degrades to curated until they exist.
 

@@ -41,22 +41,25 @@ export function SearchExperience({
   const [suggestions, setSuggestions] = useState<string[]>(SUGGESTIONS);
   const [sugSource, setSugSource] = useState<SuggestionSource>("curated");
   const [sugLoading, setSugLoading] = useState(false);
-  const [canReset, setCanReset] = useState(false);
+  const [adminMode, setAdminMode] = useState(false);
   const adminToken = useRef<string | null>(null);
   const reqId = useRef(0);
 
-  // Operator-only "Reset" affordance. Visible on localhost, or on any deploy
-  // once an admin token is provided once via ?admin=<token> (then remembered).
-  // The matching SUGGESTIONS_RESET_TOKEN must be set server-side on Vercel.
+  // Operator-only controls (Regenerate + Reset). Hidden from normal visitors;
+  // shown only after the demo operator opts in once via ?admin=<token> (kept in
+  // localStorage). Toggle OFF again with ?admin= (empty). This is the same on
+  // localhost and on Vercel, so what you test locally matches production. The
+  // matching SUGGESTIONS_RESET_TOKEN must be set server-side for Reset to work.
   useEffect(() => {
     try {
-      const sp = new URLSearchParams(window.location.search);
-      const fromUrl = sp.get("admin");
-      if (fromUrl) localStorage.setItem("adgm_admin", fromUrl);
+      const raw = new URLSearchParams(window.location.search).get("admin");
+      if (raw !== null) {
+        if (raw) localStorage.setItem("adgm_admin", raw);
+        else localStorage.removeItem("adgm_admin");
+      }
       const tok = localStorage.getItem("adgm_admin");
       adminToken.current = tok;
-      const isLocal = ["localhost", "127.0.0.1"].includes(window.location.hostname);
-      setCanReset(isLocal || Boolean(tok));
+      setAdminMode(Boolean(tok));
     } catch {
       /* no-op */
     }
@@ -387,17 +390,17 @@ export function SearchExperience({
                   </>
                 )}
               </p>
-              <div className="flex items-center gap-1">
-                <button
-                  onClick={() => loadSuggestions(true)}
-                  disabled={sugLoading}
-                  title="Regenerate suggestions from this week's searches"
-                  className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium text-adgm-steel transition-colors hover:bg-adgm-brightgrey hover:text-adgm-blue-600 disabled:opacity-50"
-                >
-                  <RefreshCw className={cn("h-3.5 w-3.5", sugLoading && "animate-spin")} />
-                  Regenerate
-                </button>
-                {canReset && (
+              {adminMode && (
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => loadSuggestions(true)}
+                    disabled={sugLoading}
+                    title="Regenerate suggestions from this week's searches"
+                    className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium text-adgm-steel transition-colors hover:bg-adgm-brightgrey hover:text-adgm-blue-600 disabled:opacity-50"
+                  >
+                    <RefreshCw className={cn("h-3.5 w-3.5", sugLoading && "animate-spin")} />
+                    Regenerate
+                  </button>
                   <button
                     onClick={resetSuggestions}
                     disabled={sugLoading}
@@ -407,8 +410,8 @@ export function SearchExperience({
                     <RotateCcw className="h-3.5 w-3.5" />
                     Reset
                   </button>
-                )}
-              </div>
+                </div>
+              )}
             </div>
             <ul className="space-y-1">
               {suggestions.map((s) => (
