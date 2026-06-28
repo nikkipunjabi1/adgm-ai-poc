@@ -1,8 +1,10 @@
 /**
  * Inject the POC enhancements into the cloned ADGM homepage:
- *   - the search overlay (clone-search-inject.html), and
  *   - the self-contained hero slider (clone-hero-fix.html), which replaces the
- *     flaky <adgm-hero> web-component so two images always show (no blue flash).
+ *     flaky <adgm-hero> web-component so two images always show (no blue flash),
+ *   - the interactive demo cards (clone-demo-cards.html) shown beneath the hero,
+ *     each linking to /search?q=… to showcase the AI search, and
+ *   - the search overlay (clone-search-inject.html).
  * Idempotent: each block is wrapped in marker comments and replaced in place on
  * re-runs. Run standalone or via the mirror script.
  *
@@ -21,6 +23,11 @@ const BLOCKS = [
     file: "clone-hero-fix.html",
     start: "<!-- POC-HERO-INJECT:start",
     end: "POC-HERO-INJECT:end -->",
+  },
+  {
+    file: "clone-demo-cards.html",
+    start: "<!-- POC-DEMO-INJECT:start",
+    end: "POC-DEMO-INJECT:end -->",
   },
   {
     file: "clone-search-inject.html",

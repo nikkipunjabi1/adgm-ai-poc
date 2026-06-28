@@ -63,6 +63,10 @@ or re-run standalone with `node scripts/inject-search.mjs`):
   background and briefly stacked both slides. We hide it and render a lightweight
   crossfade slider built from the same slide data, so the two hero images always
   show with no flash (auto-rotates every 5s; clickable dots).
+- **Demo cards** (`clone-demo-cards.html`) — an interactive strip beneath the hero
+  showcasing the POC's capabilities (disambiguation, firm + connections, court
+  matters, risk alerts, guided answers, events). Each card links to
+  `/search?q=…`, which auto-runs the query — a quick way to demo the search.
 
 ## Stack
 

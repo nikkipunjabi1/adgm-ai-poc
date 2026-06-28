@@ -19,12 +19,14 @@ most work is on the **search experience**, not the crawler.
   The clone's `search-button`/⌘K open it (overlay injected by
   `scripts/inject-search.mjs`, run automatically by the mirror).
 
-`scripts/inject-search.mjs` injects two marker-bounded blocks into the clone's
-`index.html` (idempotent): the **search overlay** (`clone-search-inject.html`) and
-the **hero slider** (`clone-hero-fix.html`). The latter hides the live
-`<adgm-hero>` web component (it hydrates slowly offline → blue flash + stacked
-slides) and renders a self-contained crossfade slider from the same slide data.
-If you re-mirror, both are re-applied automatically. Don't hand-edit the injected
+`scripts/inject-search.mjs` injects three marker-bounded blocks into the clone's
+`index.html` (idempotent, in order): the **hero slider** (`clone-hero-fix.html`,
+hides the slow-hydrating `<adgm-hero>` and renders a self-contained crossfade
+slider from the same slide data), the **demo cards** (`clone-demo-cards.html`,
+an interactive showcase strip beneath the hero whose cards link to `/search?q=…`),
+and the **search overlay** (`clone-search-inject.html`). Order matters: the demo
+script inserts itself after `.poc-hero`, which the hero block builds first. If you
+re-mirror, all three are re-applied automatically. Don't hand-edit the injected
 blocks in `index.html` — edit the snippet files and re-run the injector.
 
 Don't put an `app/page.tsx` back at the root — it would shadow the clone rewrite.
