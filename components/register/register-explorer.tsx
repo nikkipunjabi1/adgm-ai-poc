@@ -271,8 +271,9 @@ function RegisterRow({ item }: { item: Item }) {
   const Icon = meta.icon;
   return (
     <a
-      href={`/search?q=${encodeURIComponent(item.name)}`}
-      target="_top"
+      href={item.url ?? `/search?q=${encodeURIComponent(item.name)}`}
+      target="_blank"
+      rel="noreferrer"
       className="group flex flex-col rounded-xl border border-adgm-steel-mist bg-white p-4 shadow-card transition-all hover:-translate-y-0.5 hover:border-adgm-blue/30 hover:shadow-cardhover"
     >
       <div className="flex items-center justify-between gap-2">
@@ -317,7 +318,7 @@ function RegisterRow({ item }: { item: Item }) {
       </dl>
 
       <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-adgm-blue-600">
-        View in AI Search
+        View details
         <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
       </span>
     </a>
