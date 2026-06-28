@@ -30,7 +30,8 @@
     else if(e.key==='Escape'){close();}
   });
   // Intercept the homepage search affordance (class "search-button"/"search-container")
-  // wherever it lives — light DOM or inside a web-component shadow tree.
+  // wherever it lives — light DOM or inside a web-component shadow tree. Also point
+  // the "Public Registers" overview card at our working FSRA register clone.
   document.addEventListener('click',function(e){
     var path=(e.composedPath&&e.composedPath())||[];
     for(var i=0;i<path.length;i++){
@@ -40,6 +41,10 @@
         var lbl=(el.getAttribute&&(el.getAttribute('aria-label')||el.getAttribute('title')))||'';
         if(/search-(button|container|icon|trigger)/i.test(cls)||/^search$/i.test(lbl)){
           e.preventDefault();e.stopPropagation();open();return;
+        }
+        var href=(el.getAttribute&&el.getAttribute('href'))||'';
+        if(el.tagName&&el.tagName.toLowerCase()==='adgm-article-card'&&href.replace(/\/+$/,'')==='/public-registers'){
+          e.preventDefault();e.stopPropagation();window.location.href='/public-registers/fsra';return;
         }
       }
     }
