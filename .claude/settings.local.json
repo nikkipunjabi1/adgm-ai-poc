@@ -38,7 +38,8 @@
       "Bash(curl -s -X POST http://localhost:3000/api/search -H \"content-type: application/json\" -d '{\"query\":\"court judgments involving NMC Healthcare\"}')",
       "Bash(node -e 'let s=\"\";process.stdin.on\\(\"data\",d=>s+=d\\);process.stdin.on\\(\"end\",\\(\\)=>{try{const j=JSON.parse\\(s\\);if\\(j.error\\){console.log\\(\"ERROR:\",j.error\\);return}console.log\\(\"mode:\",j.mode\\);if\\(j.questions\\)console.log\\(\"questions:\",j.questions.map\\(q=>q.header\\)\\);console.log\\(\"answer:\",\\(j.answer||\"\"\\).slice\\(0,200\\)\\);console.log\\(\"sections:\",\\(j.sections||[]\\).map\\(x=>x.type+\":\"+x.uids.length\\)\\);console.log\\(\"alerts:\",\\(j.alerts||[]\\).map\\(a=>a.severity+\" \"+a.uid\\).slice\\(0,3\\)\\);console.log\\(\"records returned:\",Object.keys\\(j.records||{}\\).length\\)}catch\\(e\\){console.log\\(\"parse fail:\",s.slice\\(0,300\\)\\)}}\\)')",
       "Bash(curl -s -X POST http://localhost:3000/api/search -H \"content-type: application/json\" -d '{\"query\":\"fund managers\"}')",
-      "Bash(node -e 'let s=\"\";process.stdin.on\\(\"data\",d=>s+=d\\);process.stdin.on\\(\"end\",\\(\\)=>{const j=JSON.parse\\(s\\);console.log\\(\"mode:\",j.mode\\);if\\(j.questions\\){j.questions.forEach\\(q=>console.log\\(\" Q[\"+q.header+\"]:\",q.question,\"->\",q.options.map\\(o=>o.label\\).join\\(\" | \"\\)\\)\\)}console.log\\(\"records:\",Object.keys\\(j.records||{}\\).length\\)}\\)')"
+      "Bash(node -e 'let s=\"\";process.stdin.on\\(\"data\",d=>s+=d\\);process.stdin.on\\(\"end\",\\(\\)=>{const j=JSON.parse\\(s\\);console.log\\(\"mode:\",j.mode\\);if\\(j.questions\\){j.questions.forEach\\(q=>console.log\\(\" Q[\"+q.header+\"]:\",q.question,\"->\",q.options.map\\(o=>o.label\\).join\\(\" | \"\\)\\)\\)}console.log\\(\"records:\",Object.keys\\(j.records||{}\\).length\\)}\\)')",
+      "Bash(node scripts/inject-search.mjs)"
     ]
   }
 }

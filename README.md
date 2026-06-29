@@ -41,7 +41,7 @@ retrieved data, on **entirely free infrastructure** (the LLM aside).
 | `/adgm-courts/cases` (+ `/hearings`, `/judgments`) | **Cloned ADGM Courts** pages; the dead listing widget is replaced by a tabbed explorer over our cases/hearings/judgments data (classic + AI search), each card deep-linking to the filtered ADGM page. |
 | `/embed/courts` · `/api/courts` | Chromeless courts explorer (embedded inline by the courts clones) + its data endpoint. |
 | `/v1` | The **POC homepage** (ADGM-styled shell) with the AI search overlay (⌘K / Esc). |
-| `/search` | Full-page search experience. |
+| `/search` | Full-page search — reuses the homepage clone shell (so the real ADGM header/footer match exactly) with `/embed/search` embedded in the content. |
 | `/embed/search` | Chromeless search, embedded by the `/` clone via an `<iframe>`. |
 | `/api/search` | Streaming NDJSON search endpoint. |
 | `/api/suggestions` | Auto-updating suggested questions — derived from the week's most-asked queries (logged to `search_queries`), AI-polished by Claude; `?refresh=1` re-derives live (the UI **Regenerate** button). `DELETE` clears the log (the **Reset** button), gated by `SUGGESTIONS_RESET_TOKEN`. |

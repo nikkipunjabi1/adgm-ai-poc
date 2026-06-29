@@ -34,6 +34,11 @@ const BLOCKS = [
     start: "<!-- POC-SEARCH-INJECT:start",
     end: "POC-SEARCH-INJECT:end -->",
   },
+  {
+    file: "clone-searchpage.html",
+    start: "<!-- POC-SEARCHPAGE-INJECT:start",
+    end: "POC-SEARCHPAGE-INJECT:end -->",
+  },
 ];
 
 export async function injectSearch() {

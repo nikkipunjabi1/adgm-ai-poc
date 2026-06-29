@@ -34,7 +34,12 @@ most work is on the **search experience**, not the crawler.
   400) then post-filters by `source_id` since the 2,000+ cases would otherwise
   crowd out hearings/judgments. Court cards deep-link to the filtered ADGM page
   (`?q=<caseNumber>`; hearings need the full param set). Refresh: `npm run mirror:courts`.
-- `/search`, `/api/search` — search page and streaming endpoint.
+- `/search`, `/api/search` — search page and streaming endpoint. `/search`
+  **reuses the homepage snapshot** (rewrite → `/adgm-clone/index.html`) so the
+  real ADGM header/footer render identically; a path-gated block
+  (`clone-searchpage.html`) hides the homepage content (`adgm-page > span`) and
+  embeds `/embed/search` in its place, forwarding `?q`/`?admin`. There is **no
+  `app/search` route** — an app route would win over the rewrite.
 - `/embed/search` — chromeless POC search; the `/` clone embeds it in an iframe.
   The clone's `search-button`/⌘K open it (overlay injected by
   `scripts/inject-search.mjs`, run automatically by the mirror).
@@ -52,16 +57,18 @@ most work is on the **search experience**, not the crawler.
   Requires the `search_queries` table + `top_search_queries` fn from
   `supabase/schema.sql`; degrades to curated until they exist.
 
-`scripts/inject-search.mjs` injects three marker-bounded blocks into the clone's
+`scripts/inject-search.mjs` injects four marker-bounded blocks into the clone's
 `index.html` (idempotent, in order): the **hero slider** (`clone-hero-fix.html`,
 hides the slow-hydrating `<adgm-hero>` and renders a self-contained crossfade
 slider from the same slide data), the **demo cards** (`clone-demo-cards.html`,
 an interactive showcase strip beneath the hero whose cards link to `/search?q=…`;
 path-gated to render only on `/demo` or with `?demo`),
-and the **search overlay** (`clone-search-inject.html`). Order matters: the demo
-script inserts itself after `.poc-hero`, which the hero block builds first. If you
-re-mirror, all three are re-applied automatically. Don't hand-edit the injected
-blocks in `index.html` — edit the snippet files and re-run the injector.
+the **search overlay** (`clone-search-inject.html`), and the **search page**
+(`clone-searchpage.html`, path-gated to `/search`: hides the homepage content and
+embeds `/embed/search`). Order matters: the demo script inserts itself after
+`.poc-hero`, which the hero block builds first. If you re-mirror, all four are
+re-applied automatically. Don't hand-edit the injected blocks in `index.html` —
+edit the snippet files and re-run the injector.
 
 Don't put an `app/page.tsx` back at the root — it would shadow the clone rewrite.
 If `next build` errors with `PageNotFoundError` for a page that clearly exists,

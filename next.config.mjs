@@ -48,6 +48,11 @@ const nextConfig = {
       beforeFiles: [
         { source: "/", destination: "/adgm-clone/index.html" },
         { source: "/demo", destination: "/adgm-clone/index.html" },
+        // "/search" reuses the SAME homepage snapshot so the real ADGM header +
+        // footer render identically; an injected, path-gated block hides the
+        // homepage content and embeds /embed/search in its place. (Requires no
+        // app/search route — an app route would win over this rewrite.)
+        { source: "/search", destination: "/adgm-clone/index.html" },
         // The FSRA Public Register clone — one snapshot serves all four tab URLs;
         // the injected explorer reads the path to set the active tab.
         { source: "/public-registers/fsra", destination: "/adgm-clone/public-registers/fsra.html" },

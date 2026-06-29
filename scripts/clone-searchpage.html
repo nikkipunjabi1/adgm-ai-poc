@@ -1,0 +1,70 @@
+<!-- POC-SEARCHPAGE-INJECT:start  (added by scripts/inject-search.mjs — do not edit inline) -->
+<style id="poc-searchpage-style">
+  /* The "/search" page reuses this exact homepage snapshot so the real ADGM
+     header (<adgm-navigation>) and footer (<adgm-footer>) render identically.
+     On /search we hide the homepage content (the single anonymous <span> child
+     of <adgm-page>) and drop in our own search panel as a <section>, leaving the
+     header + footer untouched. */
+  html.poc-search adgm-page > span { display: none !important; }
+  html.poc-search .poc-searchpage { display: block; }
+  .poc-searchpage { display: none; background: #eef2f7; padding: 44px 0 72px; }
+  .poc-searchpage__wrap { max-width: 980px; margin: 0 auto; padding: 0 24px; }
+  .poc-searchpage__eyebrow { font-family: adgm-gilroy, sans-serif; font-weight: 600; font-size: 13px;
+    letter-spacing: .12em; text-transform: uppercase; color: #0088ff; margin: 0 0 10px; }
+  .poc-searchpage__head { font-family: adgm-gilroy, sans-serif; font-weight: 300;
+    font-size: clamp(26px, 3vw, 40px); line-height: 1.12; color: #0a2540; margin: 0 0 24px; }
+  .poc-searchpage__panel { background: #fff; border: 1px solid #e3e9f2; border-radius: 18px;
+    overflow: hidden; box-shadow: 0 18px 50px rgba(10,37,64,.10); }
+  .poc-searchpage__frame { display: block; width: 100%; height: 520px; border: 0; background: #fff; }
+  @media (max-width: 640px) { .poc-searchpage { padding: 28px 0 48px; } .poc-searchpage__wrap { padding: 0 16px; } }
+</style>
+<script id="poc-searchpage-script">
+(function(){
+  function onSearch(){ var p = location.pathname.replace(/\/+$/, '') || '/'; return p === '/search'; }
+  if(!onSearch()) return;
+  // Mark the document early so the content is hidden the moment the SPA renders
+  // it (no flash of the homepage before our panel appears).
+  document.documentElement.classList.add('poc-search');
+
+  function build(){
+    if(document.querySelector('.poc-searchpage')) return true;
+    var page = document.querySelector('adgm-page');
+    var footer = document.querySelector('adgm-footer');
+    if(!page || !footer) return false;
+
+    // Carry q / admin from the page URL into the embedded search.
+    var sp = new URLSearchParams(location.search);
+    var qs = new URLSearchParams();
+    if(sp.get('q')) qs.set('q', sp.get('q'));
+    if(sp.get('admin') !== null) qs.set('admin', sp.get('admin') || '');
+    qs.set('bare', '1');
+
+    var sec = document.createElement('section');
+    sec.className = 'poc-searchpage';
+    sec.innerHTML =
+      '<div class="poc-searchpage__wrap">' +
+        '<p class="poc-searchpage__eyebrow">AI-powered search · POC</p>' +
+        '<h1 class="poc-searchpage__head">Search across ADGM</h1>' +
+        '<div class="poc-searchpage__panel">' +
+          '<iframe class="poc-searchpage__frame" title="ADGM AI Search" src="/embed/search?' + qs.toString() + '"></iframe>' +
+        '</div>' +
+      '</div>';
+    page.insertBefore(sec, footer);
+
+    // Size the iframe to the embed's reported content height (page scrolls).
+    window.addEventListener('message', function(e){
+      if(e.data && e.data.type === 'poc-search-height'){
+        var f = sec.querySelector('iframe');
+        if(f) f.style.height = Math.max(460, Number(e.data.height) || 0) + 'px';
+      }
+    });
+    return true;
+  }
+
+  // The header/footer/content are rendered by the adgm-application SPA, so retry
+  // until <adgm-page> + <adgm-footer> exist.
+  var n = 0;
+  (function tick(){ if(build() || n++ > 100) return; setTimeout(tick, 120); })();
+})();
+</script>
+<!-- POC-SEARCHPAGE-INJECT:end -->
