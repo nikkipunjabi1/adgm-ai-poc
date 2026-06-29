@@ -1,15 +1,18 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { X } from "lucide-react";
 import { SearchExperience } from "@/components/search/search-experience";
 
 /**
  * Chromeless POC search, designed to be embedded in an <iframe> by the cloned
  * ADGM homepage ("/"). It posts {type:"poc-close"} to the parent window so the
- * host overlay can close (Esc or the X button).
+ * host overlay can close (Esc or the X button), and reports its content height
+ * ({type:"poc-search-height"}) so the host can size the overlay to fit (like the
+ * /v1 overlay) rather than a fixed tall box.
  */
 export default function EmbedSearchPage() {
+  const ref = useRef<HTMLDivElement>(null);
   const close = () => window.parent?.postMessage({ type: "poc-close" }, "*");
 
   useEffect(() => {
@@ -20,8 +23,19 @@ export default function EmbedSearchPage() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const report = () =>
+      window.parent?.postMessage({ type: "poc-search-height", height: el.offsetHeight }, "*");
+    report();
+    const ro = new ResizeObserver(report);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   return (
-    <div className="min-h-screen bg-white">
+    <div ref={ref} className="relative bg-white">
       <button
         onClick={close}
         aria-label="Close search"

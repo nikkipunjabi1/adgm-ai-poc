@@ -3,10 +3,12 @@
   #poc-search-overlay{position:fixed;inset:0;z-index:2147483600;display:none;
     background:rgba(8,15,40,.55);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);}
   #poc-search-overlay.open{display:block;}
-  #poc-search-frame{position:absolute;left:50%;top:6vh;transform:translateX(-50%);
-    width:min(960px,94vw);height:88vh;border:0;border-radius:18px;overflow:hidden;
-    background:#fff;box-shadow:0 30px 90px rgba(0,0,0,.45);}
-  @media (max-width:640px){#poc-search-frame{top:0;height:100vh;width:100vw;border-radius:0;}}
+  /* Match the /v1 overlay: max-w-3xl (768px), hugging its content (height set
+     from the embed's reported content height), capped so tall results scroll. */
+  #poc-search-frame{position:absolute;left:50%;top:9vh;transform:translateX(-50%);
+    width:min(768px,94vw);height:360px;max-height:82vh;border:0;border-radius:16px;overflow:hidden;
+    background:#fff;box-shadow:0 30px 90px rgba(0,0,0,.45);transition:height .15s ease;}
+  @media (max-width:640px){#poc-search-frame{top:0;height:100vh!important;max-height:none;width:100vw;border-radius:0;}}
 </style>
 <div id="poc-search-overlay" role="dialog" aria-modal="true" aria-label="ADGM AI Search">
   <iframe id="poc-search-frame" title="ADGM AI Search" loading="lazy"></iframe>
@@ -24,7 +26,16 @@
   }
   function close(){ov.classList.remove('open');document.documentElement.style.overflow='';}
   ov.addEventListener('click',function(e){if(e.target===ov)close();});
-  window.addEventListener('message',function(e){if(e.data&&e.data.type==='poc-close')close();});
+  window.addEventListener('message',function(e){
+    if(!e.data)return;
+    if(e.data.type==='poc-close')close();
+    // Size the overlay to the embed's content height (like the /v1 overlay),
+    // capped at 82vh so long result lists scroll inside the iframe.
+    else if(e.data.type==='poc-search-height'){
+      var h=Math.min(Number(e.data.height)||0,Math.round(window.innerHeight*0.82));
+      if(h>0&&window.innerWidth>640)frame.style.height=h+'px';
+    }
+  });
   document.addEventListener('keydown',function(e){
     if((e.metaKey||e.ctrlKey)&&(e.key==='k'||e.key==='K')){e.preventDefault();open();}
     else if(e.key==='Escape'){close();}

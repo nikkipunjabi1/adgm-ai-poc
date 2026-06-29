@@ -25,6 +25,22 @@
   .poc-hero__dot{width:12px;height:12px;border-radius:50%;border:0;background:rgba(255,255,255,.42);
     cursor:pointer;padding:0;transition:background .2s,transform .2s;}
   .poc-hero__dot.on{background:#fff;transform:scale(1.12);}
+  /* Lead slide (mirrors the /v1 hero: tighter title, subtitle, search-pill CTA). */
+  .poc-hero__slide.lead .poc-hero__t{font-weight:600;font-size:clamp(30px,4vw,56px);line-height:1.08;max-width:20ch;margin:0 0 20px;}
+  .poc-hero__sub{font-family:adgm-gilroy,sans-serif;font-weight:400;font-size:clamp(15px,1.3vw,19px);
+    line-height:1.55;color:rgba(255,255,255,.74);max-width:46ch;margin:0 0 30px;}
+  .poc-hero__cta{display:flex;flex-wrap:wrap;align-items:center;gap:18px;}
+  .poc-hero__search{display:inline-flex;align-items:center;gap:12px;background:rgba(255,255,255,.96);
+    border:0;border-radius:999px;padding:15px 20px;cursor:pointer;width:min(420px,100%);text-align:left;
+    box-shadow:0 12px 34px rgba(0,0,0,.20);transition:background .2s;}
+  .poc-hero__search:hover{background:#fff;}
+  .poc-hero__search svg{width:20px;height:20px;color:#0088FF;flex:0 0 auto;}
+  .poc-hero__search span{flex:1;font-family:adgm-gilroy,sans-serif;font-size:14px;color:rgba(10,37,64,.6);}
+  .poc-hero__search kbd{font-family:adgm-gilroy,sans-serif;font-size:11px;color:#7686a0;
+    border:1px solid #d7deea;background:#eef2f7;border-radius:5px;padding:2px 6px;}
+  .poc-hero__explore{display:inline-flex;align-items:center;gap:7px;cursor:pointer;
+    font-family:adgm-gilroy,sans-serif;font-weight:600;font-size:15px;color:#fff;text-decoration:none;}
+  .poc-hero__explore:hover{opacity:.85;}
   @media (max-width:640px){.poc-hero__in{padding:0 20px 92px}.poc-hero__dots{left:20px}}
 </style>
 <script id="poc-hero-script">
@@ -47,13 +63,15 @@
       };
     }).filter(function(d){return d.img;});
 
-    // Lead with a branded slide that sends visitors to the AI Search demo.
+    // Lead slide mirrors the /v1 hero: ADGM headline + a search pill that opens
+    // the AI search overlay (same as /v1). The pill carries the "search-trigger"
+    // class so the injected overlay opener (clone-search-inject) handles it.
     data.unshift({
+      lead:true,
       bg:'radial-gradient(120% 140% at 12% 18%, #0088FF 0%, #001C7D 46%, #00092A 100%)',
-      tag:'AI-powered search · POC',
-      title:'Find anything across ADGM,<br>in one intelligent search',
-      bt:'Explore the AI Demo',
-      bh:'/demo'
+      tag:'Abu Dhabi Global Market',
+      title:"The world's premier international financial centre in the capital of the UAE",
+      sub:'A broad and progressive financial centre — home to a thriving community of firms, funds and professionals operating within an independent legal framework.'
     });
     if(!data.length)return;
 
@@ -64,14 +82,28 @@
     var vp=document.createElement('div');vp.className='poc-hero__vp';
     data.forEach(function(d,i){
       var sl=document.createElement('div');
-      sl.className='poc-hero__slide'+(i===0?' on':'');
+      sl.className='poc-hero__slide'+(i===0?' on':'')+(d.lead?' lead':'');
       sl.style.backgroundImage=d.bg?d.bg:'url("'+d.img+'")';
-      sl.innerHTML='<div class="poc-hero__scrim"></div>'+
-        '<div class="poc-hero__c"><div class="poc-hero__in">'+
-          '<p class="poc-hero__tag">'+d.tag+'</p>'+
+      var body;
+      if(d.lead){
+        body='<p class="poc-hero__tag">'+d.tag+'</p>'+
           '<h2 class="poc-hero__t">'+d.title+'</h2>'+
-          (d.bt?'<a class="poc-hero__b" href="'+d.bh+'">'+d.bt+'</a>':'')+
-        '</div></div>';
+          '<p class="poc-hero__sub">'+d.sub+'</p>'+
+          '<div class="poc-hero__cta">'+
+            '<button type="button" class="poc-hero__search search-trigger" aria-label="Open AI search">'+
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>'+
+              '<span>Search firms, funds, cases, events…</span>'+
+              '<kbd>⌘K</kbd>'+
+            '</button>'+
+            '<a class="poc-hero__explore" href="#poc-explore">Explore ADGM →</a>'+
+          '</div>';
+      }else{
+        body='<p class="poc-hero__tag">'+d.tag+'</p>'+
+          '<h2 class="poc-hero__t">'+d.title+'</h2>'+
+          (d.bt?'<a class="poc-hero__b" href="'+d.bh+'">'+d.bt+'</a>':'');
+      }
+      sl.innerHTML='<div class="poc-hero__scrim"></div>'+
+        '<div class="poc-hero__c"><div class="poc-hero__in">'+body+'</div></div>';
       vp.appendChild(sl);
     });
     var dots=document.createElement('div');dots.className='poc-hero__dots';
@@ -84,6 +116,14 @@
     });
     vp.appendChild(dots);wrap.appendChild(vp);
     hero.parentNode.insertBefore(wrap,hero);
+
+    // "Explore ADGM" scrolls past the hero to the page content (the search pill
+    // opens the overlay itself via its search-trigger class).
+    var exp=wrap.querySelector('.poc-hero__explore');
+    if(exp)exp.addEventListener('click',function(e){
+      e.preventDefault();
+      window.scrollTo({top:wrap.offsetTop+wrap.offsetHeight-70,behavior:'smooth'});
+    });
 
     var slides=vp.querySelectorAll('.poc-hero__slide');
     var dotEls=dots.querySelectorAll('.poc-hero__dot');
