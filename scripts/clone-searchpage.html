@@ -51,6 +51,21 @@
       '</div>';
     page.insertBefore(sec, footer);
 
+    // The ADGM nav uses display:contents and floats over the top of the content
+    // (designed to sit over the homepage hero). Push our panel down so it starts
+    // below the nav. Re-measure on resize / after fonts settle.
+    function fitTop(){
+      var nav = document.querySelector('adgm-navigation'); if(!nav) return;
+      var b = 0;
+      nav.querySelectorAll('*').forEach(function(el){
+        var r = el.getBoundingClientRect();
+        if(r.height > 0 && r.bottom > b && r.bottom < 400) b = r.bottom;
+      });
+      if(b > 0) sec.style.paddingTop = Math.round(b + 36) + 'px';
+    }
+    fitTop(); setTimeout(fitTop, 300); setTimeout(fitTop, 1000);
+    window.addEventListener('resize', fitTop);
+
     // Size the iframe to the embed's reported content height (page scrolls).
     window.addEventListener('message', function(e){
       if(e.data && e.data.type === 'poc-search-height'){

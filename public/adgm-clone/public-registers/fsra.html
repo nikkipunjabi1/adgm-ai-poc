@@ -1475,11 +1475,13 @@ document.addEventListener('DOMContentLoaded',function(){if(typeof FindApi === 'f
 <script type="text/javascript" id="" charset="">(function(){function b(){var c=document.querySelector("#subscription_success");c&&(window.dataLayer=window.dataLayer||[],window.dataLayer.push({event:"subscription_success"}),a.disconnect())}var a=new MutationObserver(b);a.observe(document.body,{childList:!0,subtree:!0})})();</script>
 
 
+
 <!-- POC-REGISTER-INJECT:start  (added by scripts/inject-register.mjs — do not edit inline) -->
 <style id="poc-register-style">
   /* Hide the live register widget (its data API is dead offline) and show our
      own working, AI-powered explorer in its place. */
   .white-box, .inner-box, #all-tab-wrapper-div, #norecordsdiv, .tabfilter, .allTabSearch{display:none !important;}
+  adgm-cookie-notification{display:none !important;}
   #poc-register{max-width:1180px;margin:0 auto;padding:8px 24px 8px;}
   #poc-register-frame{width:100%;border:0;display:block;min-height:560px;
     transition:height .15s ease;}

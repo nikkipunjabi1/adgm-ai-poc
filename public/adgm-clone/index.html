@@ -2313,6 +2313,10 @@ document.addEventListener('DOMContentLoaded',function(){if(typeof FindApi === 'f
 
 
 
+
+
+
+
 <!-- POC-HERO-INJECT:start  (added by scripts/inject-search.mjs — do not edit inline) -->
 <style id="poc-hero-style">
   /* The live ADGM hero is a lit web-component (<adgm-hero>). Offline it hydrates
@@ -2320,6 +2324,8 @@ document.addEventListener('DOMContentLoaded',function(){if(typeof FindApi === 'f
      briefly stacks both slides. We hide it and render a self-contained crossfade
      slider built from the very same slide data, so two images always show. */
   adgm-hero{display:none !important;}
+  /* POC: never show the ADGM cookie-consent notification on any clone page. */
+  adgm-cookie-notification{display:none !important;}
   .poc-hero{position:relative;display:block;width:100%;overflow:hidden;background:#0a2540;}
   .poc-hero__vp{position:relative;width:100%;height:clamp(460px,80vh,760px);}
   .poc-hero__slide{position:absolute;inset:0;opacity:0;transition:opacity 1s ease;
@@ -2692,6 +2698,21 @@ document.addEventListener('DOMContentLoaded',function(){if(typeof FindApi === 'f
         '</div>' +
       '</div>';
     page.insertBefore(sec, footer);
+
+    // The ADGM nav uses display:contents and floats over the top of the content
+    // (designed to sit over the homepage hero). Push our panel down so it starts
+    // below the nav. Re-measure on resize / after fonts settle.
+    function fitTop(){
+      var nav = document.querySelector('adgm-navigation'); if(!nav) return;
+      var b = 0;
+      nav.querySelectorAll('*').forEach(function(el){
+        var r = el.getBoundingClientRect();
+        if(r.height > 0 && r.bottom > b && r.bottom < 400) b = r.bottom;
+      });
+      if(b > 0) sec.style.paddingTop = Math.round(b + 36) + 'px';
+    }
+    fitTop(); setTimeout(fitTop, 300); setTimeout(fitTop, 1000);
+    window.addEventListener('resize', fitTop);
 
     // Size the iframe to the embed's reported content height (page scrolls).
     window.addEventListener('message', function(e){

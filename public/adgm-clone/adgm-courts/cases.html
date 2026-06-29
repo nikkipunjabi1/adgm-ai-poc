@@ -1632,11 +1632,13 @@ document.addEventListener('DOMContentLoaded',function(){if(typeof FindApi === 'f
 <script type="text/javascript" id="" charset="">_iaq=[["client","c1749157d2a74209854518c5e47e77e0"],["delivery",714],["track","consume"]];!function(c,a){var b=c.createElement(a);b.async=1;a=c.getElementsByTagName(a)[0];b.src="/adgm-clone/s.emea01.idio.episerver.net/ia.js";a.parentNode.insertBefore(b,a)}(document,"script");</script>
 <script type="text/javascript" id="" charset="">(function(){function b(){var c=document.querySelector("#registration_success");c&&(window.dataLayer=window.dataLayer||[],window.dataLayer.push({event:"registration_success"}),a.disconnect())}var a=new MutationObserver(b);a.observe(document.body,{childList:!0,subtree:!0})})();</script>
 <script type="text/javascript" id="" charset="">(function(){function b(){var c=document.querySelector("#subscription_success");c&&(window.dataLayer=window.dataLayer||[],window.dataLayer.push({event:"subscription_success"}),a.disconnect())}var a=new MutationObserver(b);a.observe(document.body,{childList:!0,subtree:!0})})();</script>
+
 <!-- POC-COURTS-INJECT:start  (added by scripts/inject-courts.mjs — do not edit inline) -->
 <style id="poc-courts-style">
   /* Hide the live courts widget (its data API is dead offline) and show our own
      working, AI-powered explorer in its place. */
   #filter-provider-search, #courtstable, #norecordsdiv{display:none !important;}
+  adgm-cookie-notification{display:none !important;}
   #poc-courts{max-width:1180px;margin:0 auto;padding:8px 24px 8px;}
   #poc-courts-frame{width:100%;border:0;display:block;min-height:560px;transition:height .15s ease;}
   @media (max-width:640px){#poc-courts{padding:8px 16px;}}
