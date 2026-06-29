@@ -136,10 +136,9 @@
       }
       if(user)start();
     }
-    function start(){if(timer)clearInterval(timer);if(data.length>1)timer=setInterval(function(){go(cur+1);},5000);}
-    // pause while the tab is hidden so the animation never freezes mid-fade
-    document.addEventListener('visibilitychange',function(){document.hidden?(timer&&clearInterval(timer)):start();});
-    start();
+    // Auto-rotation is disabled — the hero stays on the lead slide; the dots
+    // still let you switch slides manually.
+    function start(){if(timer){clearInterval(timer);timer=null;}}
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',build);
   else build();

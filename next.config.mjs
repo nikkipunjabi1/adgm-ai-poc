@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Hide the Next.js dev tools indicator (the floating "N" badge) in development.
+  devIndicators: false,
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "assets.adgm.com" },

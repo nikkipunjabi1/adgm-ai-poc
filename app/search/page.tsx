@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Header } from "@/components/site/header";
+import { Footer } from "@/components/site/footer";
 import { SearchExperience } from "@/components/search/search-experience";
 
 export default async function SearchPage({
@@ -26,6 +27,7 @@ export default async function SearchPage({
           <SearchExperience variant="page" initialQuery={q ?? ""} />
         </div>
       </main>
+      <Footer />
     </div>
   );
 }
